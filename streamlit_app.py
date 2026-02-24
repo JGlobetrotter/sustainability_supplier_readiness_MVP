@@ -4,7 +4,7 @@ import sys
 
 # ── Page config (must be first Streamlit call) ────────────────────────────────
 st.set_page_config(
-    page_title="Sustainability Supplier Readiness (CSRD friendly)",
+    page_title="Sustainability Supplier Readiness",
     page_icon="🌍",
     layout="centered",
     initial_sidebar_state="collapsed",
@@ -171,7 +171,7 @@ if "authenticated" not in st.session_state:
 if not st.session_state.authenticated:
     st.markdown("""
     <div class="password-card">
-        <h1>🌿 ESG Screener</h1>
+        <h1>🌱 Sustainability Supplier Diagnostic </h1>
         <p>Supplier Sustainability Readiness Tool — Beta</p>
     </div>
     """, unsafe_allow_html=True)
@@ -228,8 +228,8 @@ INTAKE_QUESTIONS = {
     ],
     "What best describes your company size?": [
         "— select —",
-        "Micro (< 10 employees)",
-        "Small (10–49)",
+        "Micro",
+        "Small",
         "Medium",
         "Large",
     ],
