@@ -4,8 +4,16 @@ import sys
 
 # ── Page config (must be first Streamlit call) ────────────────────────────────
 st.set_page_config(
-    page_title="Supplier Sustainability Screener",
-    page_icon="🌿",
+    page_title="Sustainability Supplier Readiness (CSRD friendly)",
+    page_icon="<svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="28" cy="28" r="27" stroke="#d1fae5" stroke-width="1.5"></circle>
+      <circle cx="28" cy="28" r="20" stroke="#a7f3d0" stroke-width="1"></circle>
+      <path d="M28 38 C28 38 16 30 16 21 C16 14 22 10 28 14 C34 10 40 14 40 21 C40 30 28 38 28 38Z" fill="#10b981" opacity="0.15"></path>
+      <path d="M28 38 C28 38 16 30 16 21 C16 14 22 10 28 14 C34 10 40 14 40 21 C40 30 28 38 28 38Z" stroke="#059669" stroke-width="1.8" fill="none"></path>
+      <line x1="28" y1="14" x2="28" y2="38" stroke="#059669" stroke-width="1.4" stroke-dasharray="2 2"></line>
+      <path d="M28 25 Q22 20 20 24" stroke="#059669" stroke-width="1.2" fill="none"></path>
+      <path d="M28 30 Q34 25 36 29" stroke="#059669" stroke-width="1.2" fill="none"></path>
+    </svg>",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
