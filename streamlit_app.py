@@ -583,19 +583,29 @@ for key in ("answers", "results", "applied_tags", "normalized"):
 # ════════════════════════════════════════════════
 #  HEADER
 # ════════════════════════════════════════════════
-st.markdown("## 🌿 Supplier Sustainability Screener")
+st.markdown("## 🌱 Sustainability Supplier Readiness (CSRD Friendly)")
 st.caption("CSRD-aligned readiness diagnostic for SME and supply chain suppliers · Beta")
 
 with st.expander("ℹ️ About this tool", expanded=False):
-    st.markdown("""
-This tool is a fast, decision-grade diagnostic designed to help SME and supplier companies understand
-whether they are prepared for current sustainability, human rights, and climate-related reporting
-expectations — especially under the EU **Corporate Sustainability Reporting Directive (CSRD)**.
+    st.markdown(""" This Sustainability Readiness tool is a fast, decision-grade diagnostic designed to help SME and supplier companies understand whether
+they are prepared for current sustainability, human rights, and climate-related reporting expectations — especially under the EU Corporate
+Sustainability Reporting Directive (CSRD).
 
-The output is a clear readiness profile that highlights gaps, flags material risks, and distinguishes
-between suppliers who need support, monitoring, or escalation.
+Rather than asking suppliers to "do everything," the tool focuses on what actually matters: data availability, governance maturity, risk exposure, and the ability to meet near-term disclosure and due-[...]
 
-**Disclaimer:** This is a decision support tool. It is not legal advice or a final compliance determination.
+The output is a clear, comparable readiness profile that highlights gaps, flags material risks, and distinguishes between suppliers who need support, monitoring, or escalation.
+
+Built for real supply chains (not idealized ones), the tool is practical, proportionate, and globally usable.
+
+This product can also serve to screen supplier readiness to be onboarded to buyer platforms, identify weak points for triage before risk is metabolized, and prioritize next steps for investment of res[...]  
+
+Additional Notes:
+- No legal interpretation required from the supplier  
+- Aligned to what buyers actually screen for first under CSRD / HRDD  
+- Safe for Global South and SME suppliers  
+
+Disclaimer: This is a decision support tool. It is not meant to be legal advice, or a final compliance/reporting determination.
+
 """)
 
 st.markdown('<hr class="divider">', unsafe_allow_html=True)
@@ -606,9 +616,9 @@ st.markdown('<hr class="divider">', unsafe_allow_html=True)
 st.markdown("### Supplier Intake")
 
 SECTIONS = {
-    "🏢 Company Profile": list(INTAKE_QUESTIONS.items())[:5],
+    "👥 Company Profile": list(INTAKE_QUESTIONS.items())[:5],
     "⛓️ Supply Chain & Risk": list(INTAKE_QUESTIONS.items())[5:10],
-    "📬 Buyer Signals": list(INTAKE_QUESTIONS.items())[10:14],
+    "🔍 Buyer Signals": list(INTAKE_QUESTIONS.items())[10:14],
     "📋 Internal Readiness": list(INTAKE_QUESTIONS.items())[14:],
 }
 
