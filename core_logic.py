@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────
-#  ESG / CSRD Supplier Readiness Scorer
+#  Sustainability Supplier Readiness
 # ─────────────────────────────────────────────
 
 # ── 1. Question → answer-key mapping ─────────
