@@ -4,8 +4,8 @@ import sys
 
 # ── Page config (must be first Streamlit call) ────────────────────────────────
 st.set_page_config(
-    page_title="Supplier Sustainability Screener",
-    page_icon="🌿",
+    page_title="Sustainability Suppier Diagnostic",
+    page_icon="🌍",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
