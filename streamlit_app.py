@@ -1,6 +1,14 @@
 import streamlit as st
 import os
 import sys
+import io
+from datetime import datetime
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import cm
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer,
+                                 Table, TableStyle)
 
 # ── Page config (must be first Streamlit call) ────────────────────────────────
 st.set_page_config(
@@ -729,3 +737,163 @@ else:
     with st.expander("🔍 Raw output (debug)", expanded=False):
         st.json(r)
         st.write("Normalized answers:", st.session_state.normalized)
+
+    # ── PDF Export ─────────────────────────────────────────────────────────
+    st.markdown('<hr class="divider">', unsafe_allow_html=True)
+    st.markdown("### Export Report")
+
+    def build_pdf():
+        buf = io.BytesIO()
+        doc = SimpleDocTemplate(
+            buf, pagesize=A4,
+            leftMargin=2 * cm, rightMargin=2 * cm,
+            topMargin=2 * cm, bottomMargin=2 * cm,
+        )
+
+        # ── Colour palette (grey / yellow) ────────────────────────────────
+        yellow = colors.HexColor("#f5c518")
+        dark   = colors.HexColor("#1a1a1a")
+        mid    = colors.HexColor("#2a2a2a")
+        light  = colors.HexColor("#e8e8e8")
+        grid_c = colors.HexColor("#444444")
+
+        styles = getSampleStyleSheet()
+        story  = []
+
+        title_style = ParagraphStyle(
+            "T", parent=styles["Title"],
+            textColor=yellow, backColor=dark,
+            fontSize=18, spaceAfter=12,
+        )
+        h2_style = ParagraphStyle(
+            "H2", parent=styles["Heading2"],
+            textColor=yellow, fontSize=13, spaceAfter=6,
+        )
+        body_style = ParagraphStyle(
+            "B", parent=styles["Normal"],
+            textColor=light, backColor=dark,
+            fontSize=10, spaceAfter=4,
+        )
+
+        # ── Title ─────────────────────────────────────────────────────────
+        story.append(Paragraph(
+            "Sustainability Supplier Readiness Report", title_style))
+        story.append(Spacer(1, 0.3 * cm))
+
+        # ── Company profile metadata ──────────────────────────────────────
+        n = st.session_state.normalized
+        meta = [
+            ["Operating region:", n.get("operates_in_eu", "—")],
+            ["EU buyer relationship:", n.get("sells_to_eu_buyers", "—")],
+            ["Company size:", n.get("company_size", "—")],
+            ["Sector:", n.get("sector", "—")],
+            ["Value chain role:", n.get("value_chain_role", "—")],
+            ["Report date:", datetime.today().strftime("%Y-%m-%d")],
+        ]
+        mt = Table(meta, colWidths=[5 * cm, 12 * cm])
+        mt.setStyle(TableStyle([
+            ("TEXTCOLOR",     (0, 0), (-1, -1), light),
+            ("BACKGROUND",    (0, 0), (-1, -1), dark),
+            ("FONTNAME",      (0, 0), (0, -1),  "Helvetica-Bold"),
+            ("FONTSIZE",      (0, 0), (-1, -1), 10),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ]))
+        story.append(mt)
+        story.append(Spacer(1, 0.5 * cm))
+
+        # ── Score & Band ──────────────────────────────────────────────────
+        band_hex = {
+            "LOW":    "#4caf50",
+            "MEDIUM": "#f5c518",
+            "HIGH":   "#f44336",
+        }.get(band, "#e8e8e8")
+
+        story.append(Paragraph(
+            f"Readiness Score: {score} / 10", h2_style))
+        story.append(Paragraph(
+            f'Risk Band: <font color="{band_hex}">'
+            f"{band}</font> — {band_desc}",
+            body_style,
+        ))
+        story.append(Spacer(1, 0.4 * cm))
+
+        # ── Diagnostic Tags ───────────────────────────────────────────────
+        if tags:
+            story.append(Paragraph("Diagnostic Tags", h2_style))
+            tag_text = " &nbsp; | &nbsp; ".join(tags)
+            story.append(Paragraph(tag_text, body_style))
+            story.append(Spacer(1, 0.4 * cm))
+
+        # ── Recommendations ───────────────────────────────────────────────
+        if why:
+            story.append(Paragraph("Recommendations", h2_style))
+            for item in why:
+                story.append(Paragraph(f"• {item}", body_style))
+            story.append(Spacer(1, 0.4 * cm))
+
+        # ── Intake answers breakdown ──────────────────────────────────────
+        story.append(Paragraph("Intake Response Summary", h2_style))
+        ans_data = [["Question", "Answer"]]
+        for question_text, answer in st.session_state.answers.items():
+            # Truncate long questions for table readability
+            q_short = (question_text[:70] + "…") if len(question_text) > 70 else question_text
+            ans_data.append([
+                Paragraph(q_short, ParagraphStyle("qcell", fontSize=8, textColor=light)),
+                Paragraph(str(answer), ParagraphStyle("acell", fontSize=8, textColor=light)),
+            ])
+        ans_table = Table(ans_data, colWidths=[9 * cm, 8 * cm])
+        ans_table.setStyle(TableStyle([
+            ("BACKGROUND",     (0, 0), (-1, 0),  yellow),
+            ("TEXTCOLOR",      (0, 0), (-1, 0),  dark),
+            ("FONTNAME",       (0, 0), (-1, 0),  "Helvetica-Bold"),
+            ("FONTSIZE",       (0, 0), (-1, 0),  9),
+            ("BACKGROUND",     (0, 1), (-1, -1), dark),
+            ("TEXTCOLOR",      (0, 1), (-1, -1), light),
+            ("GRID",           (0, 0), (-1, -1), 0.5, grid_c),
+            ("VALIGN",         (0, 0), (-1, -1), "TOP"),
+            ("ROWBACKGROUNDS", (0, 1), (-1, -1), [dark, mid]),
+        ]))
+        story.append(ans_table)
+        story.append(Spacer(1, 0.4 * cm))
+
+        # ── Sector baseline assumptions ───────────────────────────────────
+        sector_val = n.get("sector")
+        if sector_val and sector_val in SECTOR_BASELINE_ASSUMPTIONS:
+            story.append(Paragraph(
+                f"Sector Baseline: {sector_val}", h2_style))
+            for assumption in SECTOR_BASELINE_ASSUMPTIONS[sector_val]:
+                story.append(Paragraph(f"• {assumption}", body_style))
+            story.append(Spacer(1, 0.3 * cm))
+
+        # ── Footer ────────────────────────────────────────────────────────
+        story.append(Spacer(1, 0.5 * cm))
+        footer_style = ParagraphStyle(
+            "FT", parent=styles["Normal"],
+            textColor=colors.HexColor("#888888"),
+            fontSize=8, spaceAfter=2,
+        )
+        story.append(Paragraph(
+            "This report was generated by the Sustainability Supplier "
+            "Readiness Tool (CSRD-aligned diagnostic). "
+            "It is for decision-support purposes only and does not "
+            "constitute legal or compliance advice.",
+            footer_style,
+        ))
+
+        doc.build(story)
+        buf.seek(0)
+        return buf
+
+    pdf_data = build_pdf()
+    sector_val = st.session_state.normalized.get("sector", "report")
+    fname = (
+        f"Sustainability_Readiness_"
+        f"{sector_val.replace(' ', '_').replace('/', '_')[:30]}_"
+        f"{datetime.today().strftime('%Y%m%d')}.pdf"
+    )
+    st.download_button(
+        "📄 Download PDF Report",
+        data=pdf_data,
+        file_name=fname,
+        mime="application/pdf",
+    )
