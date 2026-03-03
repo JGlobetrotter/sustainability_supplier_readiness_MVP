@@ -1,6 +1,14 @@
 import streamlit as st
 import os
 import sys
+import io
+from datetime import datetime
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import cm
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer,
+                                 Table, TableStyle)
 
 # ── Page config (must be first Streamlit call) ────────────────────────────────
 st.set_page_config(
@@ -729,3 +737,300 @@ else:
     with st.expander("🔍 Raw output (debug)", expanded=False):
         st.json(r)
         st.write("Normalized answers:", st.session_state.normalized)
+
+    # ── PDF Export ─────────────────────────────────────────────────────────
+    st.markdown('<hr class="divider">', unsafe_allow_html=True)
+    st.markdown("### Export Report")
+
+    def build_pdf():
+        buf = io.BytesIO()
+        doc = SimpleDocTemplate(
+            buf, pagesize=A4,
+            leftMargin=2 * cm, rightMargin=2 * cm,
+            topMargin=2 * cm, bottomMargin=2 * cm,
+        )
+
+        # ── Colour palette (yellow & grey on white) ─────────────────────
+        yellow    = colors.HexColor("#f5c518")
+        dark_grey = colors.HexColor("#1a1a1a")
+        mid_grey  = colors.HexColor("#4b5563")
+        grey_text = colors.HexColor("#6b7280")
+        light_grey = colors.HexColor("#9ca3af")
+        grey_line = colors.HexColor("#e5e7eb")
+        white     = colors.white
+        off_white = colors.HexColor("#f9f9f7")
+        tag_bg    = colors.HexColor("#fef9e7")
+        tag_fg    = colors.HexColor("#92400e")
+
+        band_colors = {
+            "LOW":    (colors.HexColor("#d1fae5"), colors.HexColor("#065f46")),
+            "MEDIUM": (colors.HexColor("#fef3c7"), colors.HexColor("#92400e")),
+            "HIGH":   (colors.HexColor("#fee2e2"), colors.HexColor("#991b1b")),
+        }
+
+        styles = getSampleStyleSheet()
+        story  = []
+
+        title_style = ParagraphStyle(
+            "T", parent=styles["Title"],
+            textColor=dark_grey, fontSize=20, spaceAfter=4,
+            fontName="Helvetica-Bold",
+        )
+        subtitle_style = ParagraphStyle(
+            "Sub", parent=styles["Normal"],
+            textColor=grey_text, fontSize=9, spaceAfter=12,
+        )
+        h2_style = ParagraphStyle(
+            "H2", parent=styles["Heading2"],
+            textColor=dark_grey, fontSize=13, spaceAfter=6,
+            fontName="Helvetica-Bold",
+        )
+        body_style = ParagraphStyle(
+            "B", parent=styles["Normal"],
+            textColor=mid_grey, fontSize=10, spaceAfter=4,
+        )
+        label_style = ParagraphStyle(
+            "L", parent=styles["Normal"],
+            textColor=light_grey, fontSize=8,
+            spaceAfter=2,
+        )
+        big_value_style = ParagraphStyle(
+            "BV", parent=styles["Normal"],
+            textColor=dark_grey, fontSize=22, spaceAfter=4,
+            fontName="Helvetica-Bold",
+        )
+
+        # ── Title ─────────────────────────────────────────────────────────
+        story.append(Paragraph(
+            "Sustainability Supplier Readiness Report", title_style))
+        story.append(Paragraph(
+            "CSRD-aligned readiness diagnostic for SME and supply chain suppliers",
+            subtitle_style))
+
+        # ── Divider ───────────────────────────────────────────────────────
+        divider = Table([[""]],
+            colWidths=[17 * cm], rowHeights=[1])
+        divider.setStyle(TableStyle([
+            ("LINEABOVE", (0, 0), (-1, 0), 1, yellow),
+            ("TOPPADDING", (0, 0), (-1, 0), 0),
+            ("BOTTOMPADDING", (0, 0), (-1, 0), 0),
+        ]))
+        story.append(Spacer(1, 0.3 * cm))
+        story.append(divider)
+        story.append(Spacer(1, 0.4 * cm))
+
+        # ── Company profile metadata ──────────────────────────────────────
+        n = st.session_state.normalized
+        meta = [
+            ["Operating region:", n.get("operates_in_eu", "—")],
+            ["EU buyer relationship:", n.get("sells_to_eu_buyers", "—")],
+            ["Company size:", n.get("company_size", "—")],
+            ["Sector:", n.get("sector", "—")],
+            ["Value chain role:", n.get("value_chain_role", "—")],
+            ["Report date:", datetime.today().strftime("%Y-%m-%d")],
+        ]
+        mt = Table(meta, colWidths=[5 * cm, 12 * cm])
+        mt.setStyle(TableStyle([
+            ("TEXTCOLOR",     (0, 0), (0, -1), grey_text),
+            ("TEXTCOLOR",     (1, 0), (1, -1), dark_grey),
+            ("FONTNAME",      (0, 0), (0, -1), "Helvetica-Bold"),
+            ("FONTNAME",      (1, 0), (1, -1), "Helvetica"),
+            ("FONTSIZE",      (0, 0), (-1, -1), 9),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+            ("TOPPADDING",    (0, 0), (-1, -1), 2),
+        ]))
+        story.append(mt)
+        story.append(Spacer(1, 0.5 * cm))
+
+        # ── Score & Band cards (side by side) ─────────────────────────────
+        band_bg, band_fg = band_colors.get(band, (grey_line, dark_grey))
+
+        score_cell = [
+            Paragraph("READINESS SCORE", label_style),
+            Paragraph(f'{score} <font size="12" color="#9ca3af">/ 10</font>',
+                      big_value_style),
+        ]
+
+        band_cell_content = [
+            Paragraph("RISK BAND", label_style),
+            Paragraph(band, ParagraphStyle(
+                "bandval", parent=styles["Normal"],
+                textColor=dark_grey, fontSize=18, spaceAfter=4,
+                fontName="Helvetica-Bold",
+            )),
+        ]
+        # Band badge as a small colored table
+        badge_table = Table(
+            [[Paragraph(band_desc, ParagraphStyle(
+                "badge", fontSize=8, textColor=band_fg,
+                fontName="Helvetica-Bold",
+            ))]],
+            colWidths=[7.5 * cm],
+        )
+        badge_table.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, -1), band_bg),
+            ("ROUNDEDCORNERS", [6, 6, 6, 6]),
+            ("TOPPADDING",    (0, 0), (-1, -1), 4),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+            ("LEFTPADDING",   (0, 0), (-1, -1), 8),
+            ("RIGHTPADDING",  (0, 0), (-1, -1), 8),
+        ]))
+        band_cell_content.append(badge_table)
+
+        cards = Table(
+            [[score_cell, band_cell_content]],
+            colWidths=[8 * cm, 9 * cm],
+        )
+        cards.setStyle(TableStyle([
+            ("BACKGROUND",    (0, 0), (-1, -1), off_white),
+            ("BOX",           (0, 0), (0, 0),   1, yellow),
+            ("BOX",           (1, 0), (1, 0),   1, yellow),
+            ("ROUNDEDCORNERS", [8, 8, 8, 8]),
+            ("TOPPADDING",    (0, 0), (-1, -1), 12),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 12),
+            ("LEFTPADDING",   (0, 0), (-1, -1), 14),
+            ("RIGHTPADDING",  (0, 0), (-1, -1), 14),
+            ("VALIGN",        (0, 0), (-1, -1), "TOP"),
+        ]))
+        story.append(cards)
+        story.append(Spacer(1, 0.5 * cm))
+
+        # ── Diagnostic Tags ───────────────────────────────────────────────
+        if tags:
+            story.append(Paragraph(
+                "<b>Applied diagnostic tags:</b>", body_style))
+            tag_cells = []
+            for t in tags:
+                tag_cells.append(Paragraph(
+                    t, ParagraphStyle(
+                        "tag", fontSize=8, textColor=tag_fg,
+                        fontName="Helvetica-Bold",
+                    )))
+            tag_table = Table(
+                [tag_cells],
+                colWidths=[len(t) * 0.18 * cm + 1.2 * cm for t in tags],
+            )
+            tag_style_cmds = [
+                ("BACKGROUND",    (0, 0), (-1, -1), tag_bg),
+                ("TOPPADDING",    (0, 0), (-1, -1), 3),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+                ("LEFTPADDING",   (0, 0), (-1, -1), 8),
+                ("RIGHTPADDING",  (0, 0), (-1, -1), 8),
+                ("ROUNDEDCORNERS", [10, 10, 10, 10]),
+                ("ALIGN",         (0, 0), (-1, -1), "CENTER"),
+            ]
+            tag_table.setStyle(TableStyle(tag_style_cmds))
+            story.append(Spacer(1, 0.15 * cm))
+            story.append(tag_table)
+            story.append(Spacer(1, 0.5 * cm))
+
+        # ── Recommendations ───────────────────────────────────────────────
+        if why:
+            story.append(Paragraph("<b>Recommendations:</b>", body_style))
+            story.append(Spacer(1, 0.15 * cm))
+            for item in why:
+                rec_table = Table(
+                    [[Paragraph(
+                        f"\u0020\u0020{item}",
+                        ParagraphStyle("rec", fontSize=9,
+                                       textColor=mid_grey),
+                    )]],
+                    colWidths=[16.5 * cm],
+                )
+                rec_table.setStyle(TableStyle([
+                    ("BACKGROUND",    (0, 0), (-1, -1), off_white),
+                    ("BOX",           (0, 0), (-1, -1), 0.5, grey_line),
+                    ("LINEBEFOREDECOR", (0, 0), (0, -1), 3, yellow),
+                    ("TOPPADDING",    (0, 0), (-1, -1), 8),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+                    ("LEFTPADDING",   (0, 0), (-1, -1), 12),
+                    ("RIGHTPADDING",  (0, 0), (-1, -1), 8),
+                ]))
+                story.append(rec_table)
+                story.append(Spacer(1, 0.15 * cm))
+            story.append(Spacer(1, 0.3 * cm))
+
+        # ── Sector baseline assumptions ───────────────────────────────────
+        sector_val = n.get("sector")
+        if sector_val and sector_val in SECTOR_BASELINE_ASSUMPTIONS:
+            story.append(Paragraph(
+                f"<b>Sector baseline: {sector_val}</b>", body_style))
+            story.append(Spacer(1, 0.1 * cm))
+            for assumption in SECTOR_BASELINE_ASSUMPTIONS[sector_val]:
+                story.append(Paragraph(
+                    f"\u2022  {assumption}",
+                    ParagraphStyle("assumption", fontSize=9,
+                                   textColor=colors.HexColor("#4b5563"),
+                                   leftIndent=10, spaceAfter=3),
+                ))
+            story.append(Spacer(1, 0.4 * cm))
+
+        # ── Intake answers breakdown ──────────────────────────────────────
+        story.append(Paragraph("Intake Response Summary", h2_style))
+        story.append(Spacer(1, 0.1 * cm))
+        ans_data = [["Question", "Answer"]]
+        for question_text, answer in st.session_state.answers.items():
+            q_short = (question_text[:70] + "\u2026") if len(question_text) > 70 else question_text
+            ans_data.append([
+                Paragraph(q_short, ParagraphStyle("qcell", fontSize=8,
+                          textColor=mid_grey)),
+                Paragraph(str(answer), ParagraphStyle("acell", fontSize=8,
+                          textColor=dark_grey, fontName="Helvetica-Bold")),
+            ])
+        ans_table = Table(ans_data, colWidths=[9.5 * cm, 7.5 * cm])
+        ans_table.setStyle(TableStyle([
+            ("BACKGROUND",     (0, 0), (-1, 0),  yellow),
+            ("TEXTCOLOR",      (0, 0), (-1, 0),  dark_grey),
+            ("FONTNAME",       (0, 0), (-1, 0),  "Helvetica-Bold"),
+            ("FONTSIZE",       (0, 0), (-1, 0),  9),
+            ("BACKGROUND",     (0, 1), (-1, -1), white),
+            ("GRID",           (0, 0), (-1, -1), 0.5, grey_line),
+            ("VALIGN",         (0, 0), (-1, -1), "TOP"),
+            ("TOPPADDING",     (0, 0), (-1, -1), 5),
+            ("BOTTOMPADDING",  (0, 0), (-1, -1), 5),
+            ("ROWBACKGROUNDS", (0, 1), (-1, -1), [white, off_white]),
+        ]))
+        story.append(ans_table)
+        story.append(Spacer(1, 0.5 * cm))
+
+        # ── Divider before footer ─────────────────────────────────────────
+        story.append(divider)
+        story.append(Spacer(1, 0.3 * cm))
+
+        # ── Disclaimer / Footer ───────────────────────────────────────────
+        disclaimer_style = ParagraphStyle(
+            "FT", parent=styles["Normal"],
+            textColor=grey_text,
+            fontSize=8, spaceAfter=2,
+        )
+        story.append(Paragraph(
+            "<b>Disclaimer:</b> This is a decision support tool. "
+            "It is not meant to be legal advice, or a final "
+            "compliance/reporting determination.",
+            disclaimer_style,
+        ))
+        story.append(Spacer(1, 0.15 * cm))
+        story.append(Paragraph(
+            f"Generated by Sustainability Supplier Readiness Tool "
+            f"\u2022 {datetime.today().strftime('%Y-%m-%d')}",
+            ParagraphStyle("gen", fontSize=7,
+                           textColor=colors.HexColor("#9ca3af")),
+        ))
+
+        doc.build(story)
+        buf.seek(0)
+        return buf
+
+    pdf_data = build_pdf()
+    sector_val = st.session_state.normalized.get("sector", "report")
+    fname = (
+        f"Sustainability_Readiness_"
+        f"{sector_val.replace(' ', '_').replace('/', '_')[:30]}_"
+        f"{datetime.today().strftime('%Y%m%d')}.pdf"
+    )
+    st.download_button(
+        "📄 Download PDF Report",
+        data=pdf_data,
+        file_name=fname,
+        mime="application/pdf",
+    )
