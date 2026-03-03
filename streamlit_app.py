@@ -750,15 +750,17 @@ else:
             topMargin=2 * cm, bottomMargin=2 * cm,
         )
 
-        # ── Colour palette (clean light theme matching UI) ────────────────
-        navy      = colors.HexColor("#1a1a2e")
-        white     = colors.white
-        off_white = colors.HexColor("#f9f9f9")
+        # ── Colour palette (yellow & grey on white) ─────────────────────
+        yellow    = colors.HexColor("#f5c518")
+        dark_grey = colors.HexColor("#1a1a1a")
+        mid_grey  = colors.HexColor("#4b5563")
         grey_text = colors.HexColor("#6b7280")
+        light_grey = colors.HexColor("#9ca3af")
         grey_line = colors.HexColor("#e5e7eb")
-        accent    = colors.HexColor("#6366f1")   # indigo for tags/borders
-        tag_bg    = colors.HexColor("#e0e7ff")
-        tag_fg    = colors.HexColor("#3730a3")
+        white     = colors.white
+        off_white = colors.HexColor("#f9f9f7")
+        tag_bg    = colors.HexColor("#fef9e7")
+        tag_fg    = colors.HexColor("#92400e")
 
         band_colors = {
             "LOW":    (colors.HexColor("#d1fae5"), colors.HexColor("#065f46")),
@@ -771,7 +773,7 @@ else:
 
         title_style = ParagraphStyle(
             "T", parent=styles["Title"],
-            textColor=navy, fontSize=20, spaceAfter=4,
+            textColor=dark_grey, fontSize=20, spaceAfter=4,
             fontName="Helvetica-Bold",
         )
         subtitle_style = ParagraphStyle(
@@ -780,22 +782,21 @@ else:
         )
         h2_style = ParagraphStyle(
             "H2", parent=styles["Heading2"],
-            textColor=navy, fontSize=13, spaceAfter=6,
+            textColor=dark_grey, fontSize=13, spaceAfter=6,
             fontName="Helvetica-Bold",
         )
         body_style = ParagraphStyle(
             "B", parent=styles["Normal"],
-            textColor=colors.HexColor("#374151"),
-            fontSize=10, spaceAfter=4,
+            textColor=mid_grey, fontSize=10, spaceAfter=4,
         )
         label_style = ParagraphStyle(
             "L", parent=styles["Normal"],
-            textColor=grey_text, fontSize=8,
+            textColor=light_grey, fontSize=8,
             spaceAfter=2,
         )
         big_value_style = ParagraphStyle(
             "BV", parent=styles["Normal"],
-            textColor=navy, fontSize=22, spaceAfter=4,
+            textColor=dark_grey, fontSize=22, spaceAfter=4,
             fontName="Helvetica-Bold",
         )
 
@@ -810,7 +811,7 @@ else:
         divider = Table([[""]],
             colWidths=[17 * cm], rowHeights=[1])
         divider.setStyle(TableStyle([
-            ("LINEABOVE", (0, 0), (-1, 0), 0.5, grey_line),
+            ("LINEABOVE", (0, 0), (-1, 0), 1, yellow),
             ("TOPPADDING", (0, 0), (-1, 0), 0),
             ("BOTTOMPADDING", (0, 0), (-1, 0), 0),
         ]))
@@ -831,7 +832,7 @@ else:
         mt = Table(meta, colWidths=[5 * cm, 12 * cm])
         mt.setStyle(TableStyle([
             ("TEXTCOLOR",     (0, 0), (0, -1), grey_text),
-            ("TEXTCOLOR",     (1, 0), (1, -1), navy),
+            ("TEXTCOLOR",     (1, 0), (1, -1), dark_grey),
             ("FONTNAME",      (0, 0), (0, -1), "Helvetica-Bold"),
             ("FONTNAME",      (1, 0), (1, -1), "Helvetica"),
             ("FONTSIZE",      (0, 0), (-1, -1), 9),
@@ -842,7 +843,7 @@ else:
         story.append(Spacer(1, 0.5 * cm))
 
         # ── Score & Band cards (side by side) ─────────────────────────────
-        band_bg, band_fg = band_colors.get(band, (grey_line, navy))
+        band_bg, band_fg = band_colors.get(band, (grey_line, dark_grey))
 
         score_cell = [
             Paragraph("READINESS SCORE", label_style),
@@ -854,7 +855,7 @@ else:
             Paragraph("RISK BAND", label_style),
             Paragraph(band, ParagraphStyle(
                 "bandval", parent=styles["Normal"],
-                textColor=navy, fontSize=18, spaceAfter=4,
+                textColor=dark_grey, fontSize=18, spaceAfter=4,
                 fontName="Helvetica-Bold",
             )),
         ]
@@ -881,9 +882,9 @@ else:
             colWidths=[8 * cm, 9 * cm],
         )
         cards.setStyle(TableStyle([
-            ("BACKGROUND",    (0, 0), (-1, -1), white),
-            ("BOX",           (0, 0), (0, 0),   0.5, grey_line),
-            ("BOX",           (1, 0), (1, 0),   0.5, grey_line),
+            ("BACKGROUND",    (0, 0), (-1, -1), off_white),
+            ("BOX",           (0, 0), (0, 0),   1, yellow),
+            ("BOX",           (1, 0), (1, 0),   1, yellow),
             ("ROUNDEDCORNERS", [8, 8, 8, 8]),
             ("TOPPADDING",    (0, 0), (-1, -1), 12),
             ("BOTTOMPADDING", (0, 0), (-1, -1), 12),
@@ -932,14 +933,14 @@ else:
                     [[Paragraph(
                         f"\u0020\u0020{item}",
                         ParagraphStyle("rec", fontSize=9,
-                                       textColor=colors.HexColor("#374151")),
+                                       textColor=mid_grey),
                     )]],
                     colWidths=[16.5 * cm],
                 )
                 rec_table.setStyle(TableStyle([
-                    ("BACKGROUND",    (0, 0), (-1, -1), white),
+                    ("BACKGROUND",    (0, 0), (-1, -1), off_white),
                     ("BOX",           (0, 0), (-1, -1), 0.5, grey_line),
-                    ("LINEBEFOREDECOR", (0, 0), (0, -1), 3, accent),
+                    ("LINEBEFOREDECOR", (0, 0), (0, -1), 3, yellow),
                     ("TOPPADDING",    (0, 0), (-1, -1), 8),
                     ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
                     ("LEFTPADDING",   (0, 0), (-1, -1), 12),
@@ -972,14 +973,14 @@ else:
             q_short = (question_text[:70] + "\u2026") if len(question_text) > 70 else question_text
             ans_data.append([
                 Paragraph(q_short, ParagraphStyle("qcell", fontSize=8,
-                          textColor=colors.HexColor("#374151"))),
+                          textColor=mid_grey)),
                 Paragraph(str(answer), ParagraphStyle("acell", fontSize=8,
-                          textColor=navy, fontName="Helvetica-Bold")),
+                          textColor=dark_grey, fontName="Helvetica-Bold")),
             ])
         ans_table = Table(ans_data, colWidths=[9.5 * cm, 7.5 * cm])
         ans_table.setStyle(TableStyle([
-            ("BACKGROUND",     (0, 0), (-1, 0),  navy),
-            ("TEXTCOLOR",      (0, 0), (-1, 0),  white),
+            ("BACKGROUND",     (0, 0), (-1, 0),  yellow),
+            ("TEXTCOLOR",      (0, 0), (-1, 0),  dark_grey),
             ("FONTNAME",       (0, 0), (-1, 0),  "Helvetica-Bold"),
             ("FONTSIZE",       (0, 0), (-1, 0),  9),
             ("BACKGROUND",     (0, 1), (-1, -1), white),
