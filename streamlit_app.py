@@ -18,7 +18,7 @@ st.set_page_config(
     page_title="Supplier Readiness Diagnostic — Navisignal",
     page_icon="🧭",
     layout="centered",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 # ── CSS ───────────────────────────────────────────────────────────────────────
@@ -695,7 +695,7 @@ if not st.session_state.authed:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# SIDEBAR
+# SIDEBAR — About this tool + progress nav (collapsible via Streamlit toggle)
 # ═══════════════════════════════════════════════════════════════════════════════
 cur_step   = st.session_state.step
 is_results = cur_step == len(SECTIONS)
@@ -707,16 +707,23 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
     st.markdown("""
-This diagnostic helps SME and supply chain suppliers understand whether they are prepared
-for current sustainability, human rights, and climate-related reporting expectations —
-especially under the EU **Corporate Sustainability Reporting Directive (CSRD)**.
+This is a fast, decision-grade diagnostic designed to help SME and supply chain suppliers
+understand whether they are prepared for current sustainability, human rights, and
+climate-related reporting expectations — especially under the EU **Corporate Sustainability
+Reporting Directive (CSRD)**.
 
-The tool focuses on what actually matters: data availability, governance maturity, risk
-exposure, and the ability to meet near-term disclosure expectations.
+Rather than asking suppliers to "do everything," the tool focuses on what actually matters:
+data availability, governance maturity, risk exposure, and the ability to meet near-term
+disclosure and due-diligence expectations.
 
-- No legal interpretation required
-- Aligned to what buyers actually screen for under CSRD / HRDD
+The output is a clear, comparable readiness profile that highlights gaps, flags material
+risks, and distinguishes between suppliers who need support, monitoring, or escalation.
+
+**Additional notes:**
+- No legal interpretation required from the supplier
+- Aligned to what buyers actually screen for first under CSRD / HRDD
 - Safe for Global South and SME suppliers
+- Built for real supply chains (not idealized ones)
 """)
     st.markdown("---")
     if not is_results:
@@ -770,31 +777,6 @@ st.markdown("""
   </div>
 </div>
 """, unsafe_allow_html=True)
-
-# ── About this tool ───────────────────────────────────────────────────────────
-with st.expander("ℹ️  About this tool"):
-    st.markdown("""
-This is a fast, decision-grade diagnostic designed to help SME and supply chain suppliers
-understand whether they are prepared for current sustainability, human rights, and
-climate-related reporting expectations — especially under the EU **Corporate Sustainability
-Reporting Directive (CSRD)**.
-
-Rather than asking suppliers to "do everything," the tool focuses on what actually matters:
-data availability, governance maturity, risk exposure, and the ability to meet near-term
-disclosure and due-diligence expectations.
-
-The output is a clear, comparable readiness profile that highlights gaps, flags material
-risks, and distinguishes between suppliers who need support, monitoring, or escalation.
-
-**Additional notes:**
-- No legal interpretation required from the supplier
-- Aligned to what buyers actually screen for first under CSRD / HRDD
-- Safe for Global South and SME suppliers
-- Built for real supply chains (not idealized ones)
-
-*Disclaimer: This is a decision support tool. It is not meant to be legal advice, or a
-final compliance/reporting determination.*
-""")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
