@@ -298,7 +298,7 @@ QUESTIONS = [
                   "Unclear / not explained", "Customer ESG programme", "Other"]},
     {"key": "csrd_mentioned", "section": 2,
      "text": "Have buyers mentioned CSRD, EU sustainability reporting, or new EU sustainability laws?",
-     "options": ["Yes, explicitly", 'Yes, indirectly (e.g. \"new EU requirements\")', "No", "Unsure"]},
+     "options": ["Yes, explicitly", 'Yes, indirectly (e.g. "new EU requirements")', "No", "Unsure"]},
     {"key": "internal_owner", "section": 3,
      "text": "Who is primarily responsible for sustainability or social impact topics internally?",
      "options": ["Dedicated sustainability / ESG role", "Shared / part-time responsibility",
@@ -686,7 +686,7 @@ if not st.session_state.authed:
                 st.error("Incorrect password. Contact your administrator.")
         st.markdown(
             f'<div style="text-align:center;margin-top:16px;font-size:12px;color:#71717a;">'
-            f'Don’t have access? '
+            f'Don't have access? '
             f'<a href="mailto:{BETA_EMAIL}?subject=Beta access request" '
             f'style="color:#3b82f6;font-weight:600;text-decoration:none;">Request beta access</a></div>',
             unsafe_allow_html=True,
@@ -732,7 +732,7 @@ exposure, and the ability to meet near-term disclosure expectations.
                 dot, clr, fw = "○", "#71717a", "400"
             st.markdown(
                 f'<div style="font-size:13px;color:{clr};font-weight:{fw};padding:4px 0;">'
-                f'{dot}  {s["label"]}</div>',
+                f'{dot}&nbsp;&nbsp;{s["label"]}</div>',
                 unsafe_allow_html=True,
             )
         st.markdown("---")
@@ -770,6 +770,31 @@ st.markdown("""
   </div>
 </div>
 """, unsafe_allow_html=True)
+
+# ── About this tool ───────────────────────────────────────────────────────────
+with st.expander("ℹ️  About this tool"):
+    st.markdown("""
+This is a fast, decision-grade diagnostic designed to help SME and supply chain suppliers
+understand whether they are prepared for current sustainability, human rights, and
+climate-related reporting expectations — especially under the EU **Corporate Sustainability
+Reporting Directive (CSRD)**.
+
+Rather than asking suppliers to "do everything," the tool focuses on what actually matters:
+data availability, governance maturity, risk exposure, and the ability to meet near-term
+disclosure and due-diligence expectations.
+
+The output is a clear, comparable readiness profile that highlights gaps, flags material
+risks, and distinguishes between suppliers who need support, monitoring, or escalation.
+
+**Additional notes:**
+- No legal interpretation required from the supplier
+- Aligned to what buyers actually screen for first under CSRD / HRDD
+- Safe for Global South and SME suppliers
+- Built for real supply chains (not idealized ones)
+
+*Disclaimer: This is a decision support tool. It is not meant to be legal advice, or a
+final compliance/reporting determination.*
+""")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
