@@ -686,7 +686,6 @@ if not st.session_state.authed:
                 st.error("Incorrect password. Contact your administrator.")
         st.markdown(
             f'<div style="text-align:center;margin-top:16px;font-size:12px;color:#71717a;">'
-            f'Don't have access? '
             f'<a href="mailto:{BETA_EMAIL}?subject=Beta access request" '
             f'style="color:#3b82f6;font-weight:600;text-decoration:none;">Request beta access</a></div>',
             unsafe_allow_html=True,
