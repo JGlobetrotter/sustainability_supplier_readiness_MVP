@@ -1,17 +1,18 @@
-"""
-streamlit_app.py — Navisignal Supplier Readiness Diagnostic
-Stepped wizard · Dark theme · Weighted scoring · PDF export
-"""
 import streamlit as st
 import io
 from datetime import datetime
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.units import cm
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-)
+from pathlib import Path
+from jinja2 import Template
+from weasyprint import HTML
+
+# ── ReportLab (kept for reference, replaced by WeasyPrint) ───────────────────
+# from reportlab.lib.pagesizes import A4
+# from reportlab.lib.units import cm
+# from reportlab.lib import colors
+# from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+# from reportlab.platypus import (
+#     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+# )
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -523,112 +524,163 @@ def run_screening(tags: list) -> dict:
             "interpretation": interpretation, "next_steps": steps, "tags": tags}
 
 
-def build_pdf(results: dict, answers: dict) -> bytes:
-    buf = io.BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=A4,
-                            leftMargin=2*cm, rightMargin=2*cm,
-                            topMargin=2*cm, bottomMargin=2*cm)
-    ns_surface   = colors.HexColor("#111113")
-    ns_fg        = colors.HexColor("#fafafa")
-    ns_fg_muted  = colors.HexColor("#a1a1aa")
-    ns_fg_subtle = colors.HexColor("#71717a")
-    ns_primary   = colors.HexColor("#3b82f6")
-    ns_border    = colors.HexColor("#27272a")
-    band_clr = {"GREEN": colors.HexColor("#10b981"),
-                "AMBER": colors.HexColor("#f59e0b"),
-                "RED":   colors.HexColor("#ef4444")}
+# ── build_pdf (ReportLab) — replaced by generate_pdf_from_html ─────────────
+# def build_pdf(results: dict, answers: dict) -> bytes:
+#     buf = io.BytesIO()
+#     doc = SimpleDocTemplate(buf, pagesize=A4,
+#                             leftMargin=2*cm, rightMargin=2*cm,
+#                             topMargin=2*cm, bottomMargin=2*cm)
+#     ns_surface   = colors.HexColor("#111113")
+#     ns_fg        = colors.HexColor("#fafafa")
+#     ns_fg_muted  = colors.HexColor("#a1a1aa")
+#     ns_fg_subtle = colors.HexColor("#71717a")
+#     ns_primary   = colors.HexColor("#3b82f6")
+#     ns_border    = colors.HexColor("#27272a")
+#     band_clr = {"GREEN": colors.HexColor("#10b981"),
+#                 "AMBER": colors.HexColor("#f59e0b"),
+#                 "RED":   colors.HexColor("#ef4444")}
+# 
+#     styles  = getSampleStyleSheet()
+#     title_s = ParagraphStyle("T",  parent=styles["Title"],   textColor=ns_fg,        fontSize=20, spaceAfter=4,  fontName="Helvetica-Bold")
+#     sub_s   = ParagraphStyle("Su", parent=styles["Normal"],  textColor=ns_fg_subtle, fontSize=9,  spaceAfter=12)
+#     body_s  = ParagraphStyle("B",  parent=styles["Normal"],  textColor=ns_fg_muted,  fontSize=10, spaceAfter=4)
+#     label_s = ParagraphStyle("L",  parent=styles["Normal"],  textColor=ns_fg_subtle, fontSize=8,  spaceAfter=2)
+#     big_s   = ParagraphStyle("BV", parent=styles["Normal"],  textColor=ns_fg,        fontSize=22, spaceAfter=4,  fontName="Helvetica-Bold")
+#     note_s  = ParagraphStyle("N",  parent=styles["Normal"],  textColor=ns_fg_subtle, fontSize=8,  spaceAfter=2)
+#     step_s  = ParagraphStyle("ST", parent=styles["Normal"],  textColor=ns_fg_muted,  fontSize=9,  leading=14)
+#     interp_s= ParagraphStyle("IT", parent=styles["Normal"],  textColor=ns_fg_muted,  fontSize=10, leading=15)
+#     assump_s= ParagraphStyle("AS", parent=styles["Normal"],  textColor=ns_fg_muted,  fontSize=9,  leftIndent=10, spaceAfter=3)
+# 
+#     score       = results.get("score", 0)
+#     band        = results.get("band", "")
+#     band_label  = results.get("band_label", "")
+#     interpretation = results.get("interpretation", "")
+#     next_steps  = results.get("next_steps", [])
+#     tags        = results.get("tags", [])
+#     bc          = band_clr.get(band, ns_fg_muted)
+# 
+#     story = []
+#     story.append(Paragraph("Supplier Readiness Diagnostic Report", title_s))
+#     story.append(Paragraph("Navisignal · CSRD-aligned diagnostic for SME and supply chain suppliers", sub_s))
+#     story.append(Spacer(1, 0.3*cm))
+# 
+#     div = Table([[""]], colWidths=[17*cm], rowHeights=[1])
+#     div.setStyle(TableStyle([("LINEABOVE",(0,0),(-1,0),1,ns_primary),("TOPPADDING",(0,0),(-1,0),0),("BOTTOMPADDING",(0,0),(-1,0),0)]))
+#     story += [div, Spacer(1, 0.4*cm)]
+# 
+#     meta = [["Operating region:", answers.get("operates_in_eu","—")],
+#             ["EU buyer relationship:", answers.get("sells_to_eu_buyers","—")],
+#             ["Company size:", answers.get("company_size","—")],
+#             ["Sector:", answers.get("sector","—")],
+#             ["Value chain role:", answers.get("value_chain_role","—")],
+#             ["Report date:", datetime.today().strftime("%Y-%m-%d")]]
+#     mt = Table(meta, colWidths=[5*cm,12*cm])
+#     mt.setStyle(TableStyle([("TEXTCOLOR",(0,0),(0,-1),ns_fg_subtle),("TEXTCOLOR",(1,0),(1,-1),ns_fg),
+#                              ("FONTNAME",(0,0),(0,-1),"Helvetica-Bold"),("FONTNAME",(1,0),(1,-1),"Helvetica"),
+#                              ("FONTSIZE",(0,0),(-1,-1),9),("BOTTOMPADDING",(0,0),(-1,-1),5),("TOPPADDING",(0,0),(-1,-1),2)]))
+#     story += [mt, Spacer(1,0.5*cm)]
+# 
+#     bv_s = ParagraphStyle("bv",parent=styles["Normal"],textColor=bc,fontSize=18,spaceAfter=4,fontName="Helvetica-Bold")
+#     score_cell = [Paragraph("SCORE",label_s), Paragraph(f'{score} <font size="12" color="#71717a">/ {MAX_SCORE}</font>',big_s)]
+#     band_cell  = [Paragraph("RISK BAND",label_s), Paragraph(band,bv_s),
+#                   Paragraph(band_label,ParagraphStyle("bl",parent=styles["Normal"],textColor=ns_fg_subtle,fontSize=9))]
+#     cards = Table([[score_cell,band_cell]],colWidths=[8*cm,9*cm])
+#     cards.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,-1),ns_surface),("BOX",(0,0),(0,0),1,ns_border),
+#                                ("BOX",(1,0),(1,0),1,ns_border),("TOPPADDING",(0,0),(-1,-1),12),
+#                                ("BOTTOMPADDING",(0,0),(-1,-1),12),("LEFTPADDING",(0,0),(-1,-1),14),
+#                                ("RIGHTPADDING",(0,0),(-1,-1),14),("VALIGN",(0,0),(-1,-1),"TOP")]))
+#     story += [cards, Spacer(1,0.5*cm)]
+# 
+#     story.append(Paragraph("<b>Interpretation</b>", body_s))
+#     it = Table([[Paragraph(interpretation,interp_s)]],colWidths=[16.5*cm])
+#     it.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,-1),ns_surface),("BOX",(0,0),(-1,-1),0.5,ns_border),
+#                              ("LINEBEFORE",(0,0),(0,-1),2,bc),("TOPPADDING",(0,0),(-1,-1),10),
+#                              ("BOTTOMPADDING",(0,0),(-1,-1),10),("LEFTPADDING",(0,0),(-1,-1),12),("RIGHTPADDING",(0,0),(-1,-1),12)]))
+#     story += [it, Spacer(1,0.5*cm)]
+# 
+#     if tags:
+#         story.append(Paragraph("<b>Flags triggered</b>", body_s))
+#         story.append(Paragraph("  ·  ".join(TAG_LABELS.get(t,t) for t in tags),
+#                                ParagraphStyle("tg",fontSize=9,textColor=ns_primary,spaceAfter=8)))
+#         story.append(Spacer(1,0.3*cm))
+# 
+#     if next_steps:
+#         story.append(Paragraph("<b>Recommended next steps</b>", body_s))
+#         story.append(Spacer(1,0.15*cm))
+#         for i, txt in enumerate(next_steps):
+#             row = Table([[Paragraph(f"{i+1}.  {txt}",step_s)]],colWidths=[16.5*cm])
+#             row.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,-1),ns_surface),("BOX",(0,0),(-1,-1),0.5,ns_border),
+#                                      ("TOPPADDING",(0,0),(-1,-1),8),("BOTTOMPADDING",(0,0),(-1,-1),8),
+#                                      ("LEFTPADDING",(0,0),(-1,-1),12),("RIGHTPADDING",(0,0),(-1,-1),12)]))
+#             story += [row, Spacer(1,0.1*cm)]
+#         story.append(Spacer(1,0.3*cm))
+# 
+#     sector = answers.get("sector")
+#     if sector and sector in SECTOR_ASSUMPTIONS:
+#         story.append(Paragraph(f"<b>Sector baseline: {sector}</b>", body_s))
+#         for a in SECTOR_ASSUMPTIONS[sector]:
+#             story.append(Paragraph(f"•  {a}", assump_s))
+#         story.append(Spacer(1,0.4*cm))
+# 
+#     story += [div, Spacer(1,0.3*cm)]
+#     story.append(Paragraph("<b>Disclaimer:</b> This is a decision support tool. It is not legal advice or a final compliance determination.", note_s))
+#     story.append(Spacer(1,0.15*cm))
+#     story.append(Paragraph(f"Generated by Navisignal Supplier Readiness Diagnostic · {datetime.today().strftime('%Y-%m-%d')}",
+#                            ParagraphStyle("gen",fontSize=7,textColor=ns_fg_subtle)))
+#     doc.build(story)
+#     buf.seek(0)
+#     return buf.read()
+# 
 
-    styles  = getSampleStyleSheet()
-    title_s = ParagraphStyle("T",  parent=styles["Title"],   textColor=ns_fg,        fontSize=20, spaceAfter=4,  fontName="Helvetica-Bold")
-    sub_s   = ParagraphStyle("Su", parent=styles["Normal"],  textColor=ns_fg_subtle, fontSize=9,  spaceAfter=12)
-    body_s  = ParagraphStyle("B",  parent=styles["Normal"],  textColor=ns_fg_muted,  fontSize=10, spaceAfter=4)
-    label_s = ParagraphStyle("L",  parent=styles["Normal"],  textColor=ns_fg_subtle, fontSize=8,  spaceAfter=2)
-    big_s   = ParagraphStyle("BV", parent=styles["Normal"],  textColor=ns_fg,        fontSize=22, spaceAfter=4,  fontName="Helvetica-Bold")
-    note_s  = ParagraphStyle("N",  parent=styles["Normal"],  textColor=ns_fg_subtle, fontSize=8,  spaceAfter=2)
-    step_s  = ParagraphStyle("ST", parent=styles["Normal"],  textColor=ns_fg_muted,  fontSize=9,  leading=14)
-    interp_s= ParagraphStyle("IT", parent=styles["Normal"],  textColor=ns_fg_muted,  fontSize=10, leading=15)
-    assump_s= ParagraphStyle("AS", parent=styles["Normal"],  textColor=ns_fg_muted,  fontSize=9,  leftIndent=10, spaceAfter=3)
 
-    score       = results.get("score", 0)
-    band        = results.get("band", "")
-    band_label  = results.get("band_label", "")
-    interpretation = results.get("interpretation", "")
-    next_steps  = results.get("next_steps", [])
-    tags        = results.get("tags", [])
-    bc          = band_clr.get(band, ns_fg_muted)
 
-    story = []
-    story.append(Paragraph("Supplier Readiness Diagnostic Report", title_s))
-    story.append(Paragraph("Navisignal · CSRD-aligned diagnostic for SME and supply chain suppliers", sub_s))
-    story.append(Spacer(1, 0.3*cm))
+# ── HTML → PDF via WeasyPrint ─────────────────────────────────────────────────
+TEMPLATE_PATH = Path(__file__).parent / "templates" / "pdf_report_template_clean.html"
 
-    div = Table([[""]],  colWidths=[17*cm], rowHeights=[1])
-    div.setStyle(TableStyle([("LINEABOVE",(0,0),(-1,0),1,ns_primary),("TOPPADDING",(0,0),(-1,0),0),("BOTTOMPADDING",(0,0),(-1,0),0)]))
-    story += [div, Spacer(1, 0.4*cm)]
 
-    meta = [["Operating region:", answers.get("operates_in_eu","—")],
-            ["EU buyer relationship:", answers.get("sells_to_eu_buyers","—")],
-            ["Company size:", answers.get("company_size","—")],
-            ["Sector:", answers.get("sector","—")],
-            ["Value chain role:", answers.get("value_chain_role","—")],
-            ["Report date:", datetime.today().strftime("%Y-%m-%d")]]
-    mt = Table(meta, colWidths=[5*cm,12*cm])
-    mt.setStyle(TableStyle([("TEXTCOLOR",(0,0),(0,-1),ns_fg_subtle),("TEXTCOLOR",(1,0),(1,-1),ns_fg),
-                             ("FONTNAME",(0,0),(0,-1),"Helvetica-Bold"),("FONTNAME",(1,0),(1,-1),"Helvetica"),
-                             ("FONTSIZE",(0,0),(-1,-1),9),("BOTTOMPADDING",(0,0),(-1,-1),5),("TOPPADDING",(0,0),(-1,-1),2)]))
-    story += [mt, Spacer(1,0.5*cm)]
+def generate_pdf_from_html(report_data: dict) -> bytes:
+    r   = report_data["results"]
+    ans = report_data["answers"]
 
-    bv_s = ParagraphStyle("bv",parent=styles["Normal"],textColor=bc,fontSize=18,spaceAfter=4,fontName="Helvetica-Bold")
-    score_cell = [Paragraph("SCORE",label_s), Paragraph(f'{score} <font size="12" color="#71717a">/ {MAX_SCORE}</font>',big_s)]
-    band_cell  = [Paragraph("RISK BAND",label_s), Paragraph(band,bv_s),
-                  Paragraph(band_label,ParagraphStyle("bl",parent=styles["Normal"],textColor=ns_fg_subtle,fontSize=9))]
-    cards = Table([[score_cell,band_cell]],colWidths=[8*cm,9*cm])
-    cards.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,-1),ns_surface),("BOX",(0,0),(0,0),1,ns_border),
-                               ("BOX",(1,0),(1,0),1,ns_border),("TOPPADDING",(0,0),(-1,-1),12),
-                               ("BOTTOMPADDING",(0,0),(-1,-1),12),("LEFTPADDING",(0,0),(-1,-1),14),
-                               ("RIGHTPADDING",(0,0),(-1,-1),14),("VALIGN",(0,0),(-1,-1),"TOP")]))
-    story += [cards, Spacer(1,0.5*cm)]
+    html_template = TEMPLATE_PATH.read_text(encoding="utf-8")
 
-    story.append(Paragraph("<b>Interpretation</b>", body_s))
-    it = Table([[Paragraph(interpretation,interp_s)]],colWidths=[16.5*cm])
-    it.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,-1),ns_surface),("BOX",(0,0),(-1,-1),0.5,ns_border),
-                             ("LINEBEFORE",(0,0),(0,-1),2,bc),("TOPPADDING",(0,0),(-1,-1),10),
-                             ("BOTTOMPADDING",(0,0),(-1,-1),10),("LEFTPADDING",(0,0),(-1,-1),12),("RIGHTPADDING",(0,0),(-1,-1),12)]))
-    story += [it, Spacer(1,0.5*cm)]
+    score  = r.get("score", 0)
+    sector = ans.get("sector", "")
+    assumptions = SECTOR_ASSUMPTIONS.get(sector, ["—", "—", "—"])
 
-    if tags:
-        story.append(Paragraph("<b>Flags triggered</b>", body_s))
-        story.append(Paragraph("  ·  ".join(TAG_LABELS.get(t,t) for t in tags),
-                               ParagraphStyle("tg",fontSize=9,textColor=ns_primary,spaceAfter=8)))
-        story.append(Spacer(1,0.3*cm))
+    intake_answers = [
+        {"question": q["text"], "answer": ans.get(q["key"], "—")}
+        for q in QUESTIONS
+    ]
 
-    if next_steps:
-        story.append(Paragraph("<b>Recommended next steps</b>", body_s))
-        story.append(Spacer(1,0.15*cm))
-        for i, txt in enumerate(next_steps):
-            row = Table([[Paragraph(f"{i+1}.  {txt}",step_s)]],colWidths=[16.5*cm])
-            row.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,-1),ns_surface),("BOX",(0,0),(-1,-1),0.5,ns_border),
-                                     ("TOPPADDING",(0,0),(-1,-1),8),("BOTTOMPADDING",(0,0),(-1,-1),8),
-                                     ("LEFTPADDING",(0,0),(-1,-1),12),("RIGHTPADDING",(0,0),(-1,-1),12)]))
-            story += [row, Spacer(1,0.1*cm)]
-        story.append(Spacer(1,0.3*cm))
+    context = {
+        "score":                  score,
+        "max_score":              MAX_SCORE,
+        "band":                   r.get("band", ""),
+        "band_subtitle":          r.get("band_label", ""),
+        "band_needle_percent":    min(int(score / MAX_SCORE * 100), 100),
+        "generated_date_display": datetime.today().strftime("%d %B %Y"),
+        "report_date_iso":        datetime.today().strftime("%Y-%m-%d"),
+        "operating_region":       ans.get("operates_in_eu", "—"),
+        "eu_buyer_relationship":  ans.get("sells_to_eu_buyers", "—"),
+        "company_size":           ans.get("company_size", "—"),
+        "sector":                 sector,
+        "value_chain_role":       ans.get("value_chain_role", "—"),
+        "interpretation":         r.get("interpretation", ""),
+        "tags":                   r.get("tags", []),
+        "recommendations":        r.get("next_steps", []),
+        "sector_assumption_1":    assumptions[0] if len(assumptions) > 0 else "—",
+        "sector_assumption_2":    assumptions[1] if len(assumptions) > 1 else "—",
+        "sector_assumption_3":    assumptions[2] if len(assumptions) > 2 else "—",
+        "intake_answers":         intake_answers,
+    }
 
-    sector = answers.get("sector")
-    if sector and sector in SECTOR_ASSUMPTIONS:
-        story.append(Paragraph(f"<b>Sector baseline: {sector}</b>", body_s))
-        for a in SECTOR_ASSUMPTIONS[sector]:
-            story.append(Paragraph(f"•  {a}", assump_s))
-        story.append(Spacer(1,0.4*cm))
-
-    story += [div, Spacer(1,0.3*cm)]
-    story.append(Paragraph("<b>Disclaimer:</b> This is a decision support tool. It is not legal advice or a final compliance determination.", note_s))
-    story.append(Spacer(1,0.15*cm))
-    story.append(Paragraph(f"Generated by Navisignal Supplier Readiness Diagnostic · {datetime.today().strftime('%Y-%m-%d')}",
-                           ParagraphStyle("gen",fontSize=7,textColor=ns_fg_subtle)))
-    doc.build(story)
-    buf.seek(0)
-    return buf.read()
-
+    rendered_html = Template(html_template).render(**context)
+    pdf_bytes = HTML(
+        string=rendered_html,
+        base_url=str(TEMPLATE_PATH.parent)
+    ).write_pdf()
+    return pdf_bytes
 
 # ── Session state ─────────────────────────────────────────────────────────────
 for _k, _v in {"authed": False, "step": 0, "answers": {},
@@ -1057,7 +1109,7 @@ else:
 
     col_dl, col_rs = st.columns([2, 1])
     with col_dl:
-        pdf_bytes = build_pdf(r, ans)
+        pdf_bytes = generate_pdf_from_html({"results": r, "answers": ans})
         fname = (
             f"Navisignal_Readiness_"
             f"{sector_val.replace(' ','_').replace('/','_')[:25]}_"
