@@ -521,6 +521,29 @@ def run_screening(tags: list) -> dict:
             "interpretation": interpretation, "next_steps": steps, "tags": tags}
 
 
+def build_pdf(results: dict, answers: dict) -> bytes:
+    from reportlab.lib.pagesizes import A4
+    from reportlab.pdfgen import canvas
+    import io
+    buf = io.BytesIO()
+    c = canvas.Canvas(buf, pagesize=A4)
+    width, height = A4
+    y = height - 50
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(50, y, "Sustainability Supplier Readiness Report")
+    y -= 30
+    c.setFont("Helvetica", 12)
+    for key, value in results.items():
+        line = f"{key}: {value}"
+        c.drawString(50, y, line[:100])
+        y -= 20
+        if y < 50:
+            c.showPage()
+            y = height - 50
+    c.save()
+    return buf.getvalue()
+
+
 # ── build_pdf (ReportLab) — replaced by generate_pdf_from_html ─────────────
 # def build_pdf(results: dict, answers: dict) -> bytes:
 #     buf = io.BytesIO()
