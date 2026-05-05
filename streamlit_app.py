@@ -522,25 +522,351 @@ def run_screening(tags: list) -> dict:
 
 
 def build_pdf(results: dict, answers: dict) -> bytes:
-    from reportlab.lib.pagesizes import A4
-    from reportlab.pdfgen import canvas
     import io
+    from datetime import datetime
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib import colors
+    from reportlab.lib.units import cm
+    from reportlab.lib.styles import ParagraphStyle
+    from reportlab.lib.enums import TA_RIGHT, TA_CENTER
+    from reportlab.platypus import (
+        SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
+        HRFlowable, PageBreak,
+    )
+
+    # ── Colours ───────────────────────────────────────────────────────────────
+    GOLD         = colors.HexColor("#C9A84C")
+    DARK         = colors.HexColor("#1a1a2e")
+    MID          = colors.HexColor("#3a3a5c")
+    MUTED        = colors.HexColor("#71717a")
+    LIGHT_GREY   = colors.HexColor("#e4e4e7")
+    NEAR_WHITE   = colors.HexColor("#f9f9fb")
+    STRIPE       = colors.HexColor("#fafafa")
+    HEADER_BG    = colors.HexColor("#f4f4f5")
+    AMBER_BG     = colors.HexColor("#FFF8E7")
+    AMBER_BORDER = colors.HexColor("#F59E0B")
+    BLUE_BG      = colors.HexColor("#eff6ff")
+    BLUE_BORDER  = colors.HexColor("#bfdbfe")
+    BLUE_TEXT    = colors.HexColor("#1d4ed8")
+    WARM_TEXT    = colors.HexColor("#78350f")
+    C_GREEN      = colors.HexColor("#10b981")
+    C_AMBER      = colors.HexColor("#f59e0b")
+    C_RED        = colors.HexColor("#ef4444")
+
+    BAND_COLOR = {"GREEN": C_GREEN, "AMBER": C_AMBER, "RED": C_RED}
+
+    # ── Style helper ──────────────────────────────────────────────────────────
+    def ps(name, **kw):
+        s = ParagraphStyle(name)
+        for k, v in kw.items():
+            setattr(s, k, v)
+        return s
+
+    brand_s    = ps("brand",    fontName="Helvetica-Bold", fontSize=13, textColor=DARK)
+    hdr_right_s= ps("hdrr",    fontName="Helvetica",      fontSize=7,  textColor=MUTED, alignment=TA_RIGHT, leading=11)
+    title_s    = ps("title",   fontName="Helvetica-Bold", fontSize=20, textColor=DARK, spaceAfter=3)
+    subtitle_s = ps("sub",     fontName="Helvetica",      fontSize=9,  textColor=MUTED)
+    label_s    = ps("lbl",     fontName="Helvetica-Bold", fontSize=7,  textColor=MUTED, leading=10)
+    big_num_s  = ps("bignum",  fontName="Helvetica-Bold", fontSize=30, textColor=DARK)
+    band_v_s   = ps("bandv",   fontName="Helvetica-Bold", fontSize=17, textColor=DARK, leading=20)
+    body_s     = ps("body",    fontName="Helvetica",      fontSize=9,  textColor=MID,  leading=14)
+    meta_lbl_s = ps("mlbl",   fontName="Helvetica-Bold", fontSize=7,  textColor=MUTED, leading=10)
+    meta_val_s = ps("mval",   fontName="Helvetica",      fontSize=9,  textColor=DARK,  leading=13)
+    interp_s   = ps("interp",  fontName="Helvetica",      fontSize=9,  textColor=WARM_TEXT, leading=14)
+    step_s     = ps("step",    fontName="Helvetica",      fontSize=9,  textColor=DARK, leading=14, leftIndent=6)
+    flag_s     = ps("flag",    fontName="Helvetica-Bold", fontSize=8,  textColor=BLUE_TEXT, leading=13)
+    assump_s   = ps("assump",  fontName="Helvetica",      fontSize=8,  textColor=MID,  leading=13)
+    h2_s       = ps("h2",      fontName="Helvetica-Bold", fontSize=11, textColor=DARK, spaceBefore=12, spaceAfter=4)
+    qa_hdr_s   = ps("qa_hdr", fontName="Helvetica-Bold", fontSize=8,  textColor=DARK, leading=12)
+    qa_q_s     = ps("qa_q",   fontName="Helvetica-Bold", fontSize=8,  textColor=DARK, leading=12)
+    qa_a_s     = ps("qa_a",   fontName="Helvetica",      fontSize=8,  textColor=MID,  leading=12)
+    bar_lbl_s  = ps("barlbl", fontName="Helvetica",      fontSize=7,  textColor=MUTED)
+    bar_lbl_c  = ps("barlblc",fontName="Helvetica",      fontSize=7,  textColor=MUTED, alignment=TA_CENTER)
+    bar_lbl_r  = ps("barlblr",fontName="Helvetica",      fontSize=7,  textColor=MUTED, alignment=TA_RIGHT)
+
+    # ── Extract data ──────────────────────────────────────────────────────────
+    score          = results.get("score", 0)
+    band           = results.get("band", "AMBER")
+    band_label     = results.get("band_label", "")
+    interpretation = results.get("interpretation", "")
+    next_steps     = results.get("next_steps", [])
+    tags           = results.get("tags", [])
+    bc             = BAND_COLOR.get(band, C_AMBER)
+
+    op_region   = answers.get("operates_in_eu", "—")
+    eu_buyer    = answers.get("sells_to_eu_buyers", "—")
+    co_size     = answers.get("company_size", "—")
+    sector      = answers.get("sector", "—")
+    vc_role     = answers.get("value_chain_role", "—")
+    report_date = datetime.today().strftime("%Y-%m-%d")
+
+    _TAG_LABELS = {
+        "CSRD_CASCADE_SIGNAL":        "CSRD cascade signal",
+        "EU_EXPOSURE_NON_EU":         "EU exposure",
+        "POLICY_LIGHT":               "Policy gaps",
+        "HRDD_RELEVANCE_HIGH":        "HRDD relevance high",
+        "BUYER_OPACITY_RISK":         "Buyer opacity risk",
+        "ENVIRONMENTAL_BASELINE_GAP": "Environmental baseline gap",
+        "DOCUMENTATION_LIGHT":        "Documentation light",
+        "SUPPLIER_CONFIDENCE_LOW":    "Low confidence",
+        "OWNER_GAP":                  "Owner gap",
+    }
+
+    _QUESTION_TEXTS = [
+        ("operates_in_eu",          "Where is your company primarily operating?"),
+        ("sells_to_eu_buyers",      "Do you sell directly or indirectly to EU-based companies?"),
+        ("company_size",            "What best describes your company size?"),
+        ("sector",                  "Which sector best fits your operations?"),
+        ("value_chain_role",        "Which best describes your role in the value chain?"),
+        ("supply_chain_complexity", "How complex is your supply chain?"),
+        ("hr_risk_region",          "Do your operations occur in higher-risk labour / HR regions?"),
+        ("labor_material",          "Are labour conditions a material issue?"),
+        ("env_asked",               "Have buyers asked about environmental or climate topics?"),
+        ("env_topics",              "Which environmental topics have buyers mentioned?"),
+        ("recent_esg_requests",     "Have buyers recently requested ESG / sustainability information?"),
+        ("more_detailed_requests",  "Have you been asked to complete more detailed questionnaires?"),
+        ("request_driver",          "What do you think prompted these requests?"),
+        ("csrd_mentioned",          "Have buyers mentioned CSRD or EU sustainability laws?"),
+        ("internal_owner",          "Who is primarily responsible for sustainability internally?"),
+        ("policy_status",           "Do you have written environment / labour policies?"),
+        ("data_tracking",           "Do you currently track sustainability or social data?"),
+        ("confidence",              "How confident are you responding to buyer ESG requests?"),
+    ]
+
+    # ── Document ──────────────────────────────────────────────────────────────
     buf = io.BytesIO()
-    c = canvas.Canvas(buf, pagesize=A4)
-    width, height = A4
-    y = height - 50
-    c.setFont("Helvetica-Bold", 16)
-    c.drawString(50, y, "Sustainability Supplier Readiness Report")
-    y -= 30
-    c.setFont("Helvetica", 12)
-    for key, value in results.items():
-        line = f"{key}: {value}"
-        c.drawString(50, y, line[:100])
-        y -= 20
-        if y < 50:
-            c.showPage()
-            y = height - 50
-    c.save()
+    ML, MR, MT, MB = 2*cm, 2*cm, 2*cm, 2.5*cm
+    doc = SimpleDocTemplate(buf, pagesize=A4,
+                            leftMargin=ML, rightMargin=MR,
+                            topMargin=MT, bottomMargin=MB)
+    W = A4[0] - ML - MR
+
+    story = []
+
+    # ── Header ────────────────────────────────────────────────────────────────
+    hdr_tbl = Table(
+        [[Paragraph("Navisignal", brand_s),
+          Paragraph(f"SUPPLIER READINESS REPORT<br/>"
+                    f"<font size='6'>Generated {report_date}</font>", hdr_right_s)]],
+        colWidths=[W * 0.5, W * 0.5],
+    )
+    hdr_tbl.setStyle(TableStyle([
+        ("VALIGN",        (0, 0), (-1, -1), "MIDDLE"),
+        ("TOPPADDING",    (0, 0), (-1, -1), 4),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+    ]))
+    story.append(hdr_tbl)
+    story.append(HRFlowable(width=W, thickness=1.5, color=GOLD, spaceAfter=10))
+
+    # ── Title ─────────────────────────────────────────────────────────────────
+    story.append(Paragraph("Supplier Readiness Diagnostic", title_s))
+    story.append(Paragraph(
+        "CSRD-aligned readiness assessment for SME and supply chain suppliers · Beta",
+        subtitle_s,
+    ))
+    story.append(Spacer(1, 14))
+
+    # ── Score + Risk Band ─────────────────────────────────────────────────────
+    score_cell = [
+        Paragraph("SCORE", label_s),
+        Paragraph(f"{score} <font size='16'>/ 12</font>", big_num_s),
+    ]
+    band_cell = [
+        Paragraph("RISK BAND", label_s),
+        Paragraph(band_label, band_v_s),
+        Paragraph("Some sustainability-driven pressure likely", body_s),
+    ]
+    sb_tbl = Table([[score_cell, band_cell]], colWidths=[W * 0.28, W * 0.72])
+    sb_tbl.setStyle(TableStyle([
+        ("VALIGN",        (0, 0), (-1, -1), "TOP"),
+        ("LEFTPADDING",   (0, 0), (-1, -1), 8),
+        ("RIGHTPADDING",  (0, 0), (-1, -1), 8),
+        ("TOPPADDING",    (0, 0), (-1, -1), 8),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+        ("BOX",           (0, 0), (0, 0), 0.5, LIGHT_GREY),
+        ("BOX",           (1, 0), (1, 0), 0.5, LIGHT_GREY),
+        ("BACKGROUND",    (0, 0), (0, 0), NEAR_WHITE),
+        ("BACKGROUND",    (1, 0), (1, 0), NEAR_WHITE),
+    ]))
+    story.append(sb_tbl)
+    story.append(Spacer(1, 5))
+
+    # Risk bar
+    seg = W / 3
+    risk_bar = Table([["", "", ""]], colWidths=[seg, seg, seg])
+    risk_bar.setStyle(TableStyle([
+        ("BACKGROUND",    (0, 0), (0, 0), C_GREEN),
+        ("BACKGROUND",    (1, 0), (1, 0), C_AMBER),
+        ("BACKGROUND",    (2, 0), (2, 0), C_RED),
+        ("ROWHEIGHT",     (0, 0), (-1, -1), 6),
+        ("LEFTPADDING",   (0, 0), (-1, -1), 0),
+        ("RIGHTPADDING",  (0, 0), (-1, -1), 0),
+        ("TOPPADDING",    (0, 0), (-1, -1), 0),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+    ]))
+    story.append(risk_bar)
+    bar_lbls = Table(
+        [[Paragraph("Low", bar_lbl_s),
+          Paragraph("Moderate", bar_lbl_c),
+          Paragraph("High", bar_lbl_r)]],
+        colWidths=[seg, seg, seg],
+    )
+    bar_lbls.setStyle(TableStyle([
+        ("LEFTPADDING",   (0, 0), (-1, -1), 0),
+        ("RIGHTPADDING",  (0, 0), (-1, -1), 0),
+        ("TOPPADDING",    (0, 0), (-1, -1), 1),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+    ]))
+    story.append(bar_lbls)
+    story.append(Spacer(1, 12))
+
+    # ── Metadata grid ─────────────────────────────────────────────────────────
+    col3 = W / 3
+    meta_rows = [
+        [Paragraph("OPERATING REGION", meta_lbl_s),
+         Paragraph("EU BUYER RELATIONSHIP", meta_lbl_s),
+         Paragraph("COMPANY SIZE", meta_lbl_s)],
+        [Paragraph(op_region, meta_val_s),
+         Paragraph(eu_buyer,  meta_val_s),
+         Paragraph(co_size,   meta_val_s)],
+        [Paragraph("SECTOR", meta_lbl_s),
+         Paragraph("VALUE CHAIN ROLE", meta_lbl_s),
+         Paragraph("REPORT DATE", meta_lbl_s)],
+        [Paragraph(sector,      meta_val_s),
+         Paragraph(vc_role,     meta_val_s),
+         Paragraph(report_date, meta_val_s)],
+    ]
+    meta_tbl = Table(meta_rows, colWidths=[col3, col3, col3])
+    meta_tbl.setStyle(TableStyle([
+        ("BOX",           (0, 0), (-1, -1), 0.5, LIGHT_GREY),
+        ("INNERGRID",     (0, 0), (-1, -1), 0.3, LIGHT_GREY),
+        ("BACKGROUND",    (0, 0), (-1, 0),  HEADER_BG),
+        ("BACKGROUND",    (0, 2), (-1, 2),  HEADER_BG),
+        ("LEFTPADDING",   (0, 0), (-1, -1), 6),
+        ("RIGHTPADDING",  (0, 0), (-1, -1), 6),
+        ("TOPPADDING",    (0, 0), (-1, -1), 4),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ("VALIGN",        (0, 0), (-1, -1), "TOP"),
+    ]))
+    story.append(meta_tbl)
+    story.append(Spacer(1, 12))
+
+    # ── Diagnostic flags ──────────────────────────────────────────────────────
+    if tags:
+        story.append(Paragraph("DIAGNOSTIC FLAGS TRIGGERED", label_s))
+        story.append(Spacer(1, 3))
+        flag_labels = "   ·   ".join(
+            _TAG_LABELS.get(t, t.replace("_", " ").title()) for t in tags
+        )
+        flag_box = Table([[Paragraph(flag_labels, flag_s)]], colWidths=[W])
+        flag_box.setStyle(TableStyle([
+            ("BOX",           (0, 0), (-1, -1), 0.5, BLUE_BORDER),
+            ("BACKGROUND",    (0, 0), (-1, -1), BLUE_BG),
+            ("LEFTPADDING",   (0, 0), (-1, -1), 8),
+            ("RIGHTPADDING",  (0, 0), (-1, -1), 8),
+            ("TOPPADDING",    (0, 0), (-1, -1), 6),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+        ]))
+        story.append(flag_box)
+        story.append(Spacer(1, 10))
+
+    # ── Interpretation ────────────────────────────────────────────────────────
+    if interpretation:
+        story.append(Paragraph("INTERPRETATION", label_s))
+        story.append(Spacer(1, 3))
+        interp_box = Table([[Paragraph(interpretation, interp_s)]], colWidths=[W])
+        interp_box.setStyle(TableStyle([
+            ("BOX",           (0, 0), (-1, -1), 0.5, AMBER_BORDER),
+            ("LINEBEFORE",    (0, 0), (0, -1),  3,   AMBER_BORDER),
+            ("BACKGROUND",    (0, 0), (-1, -1), AMBER_BG),
+            ("LEFTPADDING",   (0, 0), (-1, -1), 10),
+            ("RIGHTPADDING",  (0, 0), (-1, -1), 8),
+            ("TOPPADDING",    (0, 0), (-1, -1), 8),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+        ]))
+        story.append(interp_box)
+        story.append(Spacer(1, 10))
+
+    # ── Sector assumptions ────────────────────────────────────────────────────
+    sector_assumptions = SECTOR_ASSUMPTIONS.get(sector, [])
+    if sector_assumptions:
+        story.append(Paragraph(
+            f"SECTOR BASELINE (COMMON ASSUMPTIONS) — {sector.upper()}", label_s
+        ))
+        story.append(Spacer(1, 3))
+        rows = [[Paragraph(f"—  {a}", assump_s)] for a in sector_assumptions]
+        sect_box = Table(rows, colWidths=[W])
+        sect_box.setStyle(TableStyle([
+            ("BOX",           (0, 0), (-1, -1), 0.5, LIGHT_GREY),
+            ("BACKGROUND",    (0, 0), (-1, -1), NEAR_WHITE),
+            ("LEFTPADDING",   (0, 0), (-1, -1), 10),
+            ("RIGHTPADDING",  (0, 0), (-1, -1), 8),
+            ("TOPPADDING",    (0, 0), (-1, -1), 4),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ]))
+        story.append(sect_box)
+        story.append(Spacer(1, 10))
+
+    # ── Recommended next steps ────────────────────────────────────────────────
+    if next_steps:
+        story.append(Paragraph("Recommended next steps", h2_s))
+        for step in next_steps:
+            story.append(Paragraph(f"[ ]  {step}", step_s))
+            story.append(Spacer(1, 3))
+        story.append(Spacer(1, 6))
+
+    # ── Page 2: Intake answers ────────────────────────────────────────────────
+    story.append(PageBreak())
+    story.append(Paragraph("Intake Answers", h2_s))
+    story.append(Spacer(1, 6))
+
+    qa_rows = [[
+        Paragraph("#", qa_hdr_s),
+        Paragraph("Question", qa_hdr_s),
+        Paragraph("Answer", qa_hdr_s),
+    ]]
+    for i, (key, question) in enumerate(_QUESTION_TEXTS, 1):
+        val = answers.get(key, "—")
+        bg = NEAR_WHITE if i % 2 == 0 else colors.white
+        qa_rows.append([
+            Paragraph(str(i), qa_a_s),
+            Paragraph(question, qa_q_s),
+            Paragraph(str(val), qa_a_s),
+        ])
+
+    num_col = 0.6 * cm
+    ans_col = W * 0.38
+    q_col   = W - num_col - ans_col
+    qa_tbl  = Table(qa_rows, colWidths=[num_col, q_col, ans_col])
+    qa_style = [
+        ("BACKGROUND",    (0, 0), (-1, 0),  HEADER_BG),
+        ("BOX",           (0, 0), (-1, -1), 0.5, LIGHT_GREY),
+        ("INNERGRID",     (0, 0), (-1, -1), 0.3, LIGHT_GREY),
+        ("LEFTPADDING",   (0, 0), (-1, -1), 5),
+        ("RIGHTPADDING",  (0, 0), (-1, -1), 5),
+        ("TOPPADDING",    (0, 0), (-1, -1), 4),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ("VALIGN",        (0, 0), (-1, -1), "TOP"),
+    ]
+    for i in range(1, len(qa_rows)):
+        if i % 2 == 0:
+            qa_style.append(("BACKGROUND", (0, i), (-1, i), NEAR_WHITE))
+    qa_tbl.setStyle(TableStyle(qa_style))
+    story.append(qa_tbl)
+
+    # ── Footer ────────────────────────────────────────────────────────────────
+    def _footer(canv, doc_obj):
+        canv.saveState()
+        canv.setFont("Helvetica", 7)
+        canv.setFillColor(MUTED)
+        pw   = A4[0]
+        yf   = 1.1 * cm
+        canv.drawString(ML, yf, "Navisignal.app")
+        canv.drawRightString(pw - MR, yf, "hello@navisignal.app")
+        canv.drawCentredString(pw / 2, yf, f"Page {doc_obj.page} of 2")
+        canv.restoreState()
+
+    doc.build(story, onFirstPage=_footer, onLaterPages=_footer)
     return buf.getvalue()
 
 
