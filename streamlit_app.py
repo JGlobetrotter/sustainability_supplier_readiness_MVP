@@ -2,17 +2,17 @@ import streamlit as st
 import io
 from datetime import datetime
 from pathlib import Path
-from jinja2 import Template
-from weasyprint import HTML
+# from jinja2 import Template
+# from weasyprint import HTML
 
-# ── ReportLab (kept for reference, replaced by WeasyPrint) ───────────────────
-# from reportlab.lib.pagesizes import A4
-# from reportlab.lib.units import cm
-# from reportlab.lib import colors
-# from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-# from reportlab.platypus import (
-#     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-# )
+── ReportLab 
+ from reportlab.lib.pagesizes import A4
+ from reportlab.lib.units import cm
+ from reportlab.lib import colors
+ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+ from reportlab.platypus import (
+     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+ )
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
