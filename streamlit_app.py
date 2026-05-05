@@ -1106,7 +1106,8 @@ else:
 
     col_dl, col_rs = st.columns([2, 1])
     with col_dl:
-        pdf_bytes = generate_pdf_from_html({"results": r, "answers": ans})
+        pdf_bytes = build_pdf(r, ans)
+        # pdf_bytes = generate_pdf_from_html({"results": r, "answers": ans})
         fname = (
             f"Navisignal_Readiness_"
             f"{sector_val.replace(' ','_').replace('/','_')[:25]}_"
