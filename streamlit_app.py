@@ -5,7 +5,7 @@ from pathlib import Path
 # from jinja2 import Template
 # from weasyprint import HTML
 
-── ReportLab 
+
  from reportlab.lib.pagesizes import A4
  from reportlab.lib.units import cm
  from reportlab.lib import colors
