@@ -1298,7 +1298,7 @@ if not is_results:
         unsafe_allow_html=True,
     )
     st.markdown(
-        f'<h1 style="font-family:\'DM Serif Display\',Georgia,serif;font-size:28px;'
+        f'<h1 style="font-family:\'Space Grotesk\',sans-serif;font-size:28px;'
         f'color:#fafafa;line-height:1.2;margin-bottom:6px;font-weight:400;">{section["label"]}</h1>',
         unsafe_allow_html=True,
     )
@@ -1441,7 +1441,7 @@ else:
         unsafe_allow_html=True,
     )
     st.markdown(
-        '<h1 style="font-family:\'DM Serif Display\',Georgia,serif;font-size:28px;'
+        '<h1 style="font-family:\'Space Grotesk\',sans-serif;font-size:28px;'
         'color:#fafafa;line-height:1.2;margin-bottom:6px;font-weight:400;">Your readiness profile</h1>',
         unsafe_allow_html=True,
     )
@@ -1457,7 +1457,7 @@ else:
             f'<div style="background:#1C2B50;border:1px solid #1C3060;border-radius:6px;padding:16px 18px;">'
             f'<div style="font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;'
             f'color:#8094B4;margin-bottom:8px;">Score</div>'
-            f'<div style="font-family:\'DM Serif Display\',Georgia,serif;font-size:42px;'
+            f'<div style="font-family:\'Space Grotesk\',sans-serif;font-size:42px;'
             f'color:#fafafa;line-height:1;">'
             f'{score}<span style="font-size:16px;color:#8094B4;"> / {MAX_SCORE}</span></div></div>',
             unsafe_allow_html=True,
@@ -1467,7 +1467,7 @@ else:
             f'<div style="background:#1C2B50;border:1px solid #1C3060;border-radius:6px;padding:16px 18px;">'
             f'<div style="font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;'
             f'color:#8094B4;margin-bottom:8px;">Risk band</div>'
-            f'<div style="font-family:\'DM Serif Display\',Georgia,serif;font-size:28px;'
+            f'<div style="font-family:\'Space Grotesk\',sans-serif;font-size:28px;'
             f'color:{bc};line-height:1;margin-bottom:4px;">{band}</div>'
             f'<div style="font-size:11px;color:#8094B4;margin-bottom:10px;">{band_label}</div>'
             f'<div style="height:6px;border-radius:9999px;position:relative;margin-bottom:6px;'
@@ -1535,7 +1535,7 @@ else:
         unsafe_allow_html=True,
     )
     st.markdown(
-        '<h2 style="font-family:\'DM Serif Display\',Georgia,serif;font-size:20px;'
+        '<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:20px;'
         'font-weight:400;color:#fafafa;margin-bottom:16px;">Recommended next steps</h2>',
         unsafe_allow_html=True,
     )
