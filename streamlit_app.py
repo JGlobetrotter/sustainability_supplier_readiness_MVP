@@ -424,16 +424,16 @@ TAG_DEFS = {
 }
 
 TAG_WEIGHTS = {
-    "CSRD_CASCADE_SIGNAL":        1,
-    "EU_EXPOSURE_NON_EU":         1,
-    "POLICY_LIGHT":               2,
-    "HRDD_RELEVANCE_HIGH":        2,
-    "BUYER_OPACITY_RISK":         1,
+    "CSRD_CASCADE_SIGNAL":        2,
+    "EU_EXPOSURE_NON_EU":         2,
+    "BUYER_OPACITY_RISK":         2,
+    "HRDD_RELEVANCE_HIGH":        1,
+    "OWNER_GAP":                  1,
     "ENVIRONMENTAL_BASELINE_GAP": 1,
-    "DOCUMENTATION_LIGHT":        1,
-    "SUPPLIER_CONFIDENCE_LOW":    1,
-    "OWNER_GAP":                  2,
+    "POLICY_LIGHT":               1,
     "DUAL_ROLE_PRESSURE":         1,
+    "SUPPLIER_CONFIDENCE_LOW":    1,
+    "DOCUMENTATION_LIGHT":        0,
 }
 
 TAG_LABELS = {
@@ -500,7 +500,46 @@ def derive_tags(a: dict) -> list:
 
 
 def run_screening(tags: list) -> dict:
-    score = sum(TAG_WEIGHTS.get(t, 0) for t in tags)
+    tag_set = set(tags)
+    score   = 0
+    reasons = []
+
+    if "CSRD_CASCADE_SIGNAL" in tag_set:
+        score += 2
+        reasons.append("CSRD readiness activities strongly recommended.")
+
+    if "EU_EXPOSURE_NON_EU" in tag_set:
+        score += 2
+        reasons.append("EU business links suggest additional CSRD vulnerability.")
+
+    if "BUYER_OPACITY_RISK" in tag_set:
+        score += 2
+        reasons.append("Buyers are expressing conflicting or confusing requests.")
+
+    if "HRDD_RELEVANCE_HIGH" in tag_set:
+        score += 1
+        reasons.append("Human rights and labor strengthening recommended.")
+
+    if "OWNER_GAP" in tag_set:
+        score += 1
+        reasons.append("Responsibility gaps detected.")
+
+    if "ENVIRONMENTAL_BASELINE_GAP" in tag_set:
+        score += 1
+        reasons.append("Environmental baseline processes missing.")
+
+    if "POLICY_LIGHT" in tag_set:
+        score += 1
+        reasons.append("Policy documentation is light or missing.")
+
+    if "DUAL_ROLE_PRESSURE" in tag_set:
+        score += 1
+        reasons.append("Multiple pressure signals detected.")
+
+    if "SUPPLIER_CONFIDENCE_LOW" in tag_set:
+        score += 1
+        reasons.append("Low confidence suggests external support may help.")
+
     if score <= 2:
         band, band_label = "GREEN", "Low risk"
         interpretation = (
@@ -520,22 +559,25 @@ def run_screening(tags: list) -> dict:
             "get caught flat-footed during buyer requests, audits, or tender processes. "
             "Move quickly to establish ownership, baseline policies, and auditable evidence."
         )
+
     steps = []
-    if "OWNER_GAP" in tags:
+    if "OWNER_GAP" in tag_set:
         steps.append("Assign a single accountable owner for sustainability and compliance requests — by name and role.")
-    if "POLICY_LIGHT" in tags:
+    if "POLICY_LIGHT" in tag_set:
         steps.append("Draft a minimum policy set covering environment and labor/human rights, with version control and sign-off.")
-    if "DOCUMENTATION_LIGHT" in tags:
+    if "DOCUMENTATION_LIGHT" in tag_set:
         steps.append("Start a basic data baseline: energy, emissions assumptions, water, and waste in a simple tracker.")
-    if "HRDD_RELEVANCE_HIGH" in tags:
+    if "HRDD_RELEVANCE_HIGH" in tag_set:
         steps.append("Map human rights and labor risk in sourcing countries and set up a lightweight due diligence checklist.")
-    if "CSRD_CASCADE_SIGNAL" in tags or "BUYER_OPACITY_RISK" in tags:
+    if "CSRD_CASCADE_SIGNAL" in tag_set or "BUYER_OPACITY_RISK" in tag_set:
         steps.append("Create a buyer-response pack: 1-page overview + evidence folder + standard Q&A for incoming requests.")
-    if "EU_EXPOSURE_NON_EU" in tags:
+    if "EU_EXPOSURE_NON_EU" in tag_set:
         steps.append("Identify EU-linked customers and expected reporting asks. Align your evidence to what they request most.")
     steps.append("Package all outputs into a reusable Readiness Folder — policies, tracker, evidence, Q&A — for future requests.")
+
     return {"score": score, "band": band, "band_label": band_label,
-            "interpretation": interpretation, "next_steps": steps, "tags": tags}
+            "interpretation": interpretation, "next_steps": steps,
+            "reasons": reasons, "tags": tags}
 
 
 def build_pdf(results: dict, answers: dict) -> bytes:
