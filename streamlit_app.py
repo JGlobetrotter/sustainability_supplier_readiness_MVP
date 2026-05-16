@@ -22,17 +22,17 @@ st.set_page_config(
 # ── CSS ───────────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 /* ── Global fonts & background ────────────────────────────────────────── */
 *, html, body {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 .stApp,
 [data-testid="stAppViewContainer"],
 [data-testid="stMain"],
 .main, section.main {
-  background-color: #09090b !important;
+  background-color: #0A1636 !important;
 }
 
 /* ── Hide Streamlit chrome ──────────────────────────────────────────────── */
@@ -57,7 +57,7 @@ header[data-testid="stHeader"],
 [data-testid="stWidgetLabel"] p,
 label[data-testid="stWidgetLabel"] {
   color: #fafafa !important;
-  font-family: 'DM Sans', sans-serif !important;
+  font-family: 'Inter', sans-serif !important;
   font-size: 13px !important;
   font-weight: 500 !important;
   margin-bottom: 4px !important;
@@ -65,71 +65,71 @@ label[data-testid="stWidgetLabel"] {
 
 /* ── BaseWeb Select — dark ──────────────────────────────────────────────── */
 [data-baseweb="select"] > div:first-child {
-  background-color: #18181b !important;
-  border: 1px solid #27272a !important;
+  background-color: #1C2B50 !important;
+  border: 1px solid #1C3060 !important;
   border-radius: 6px !important;
   box-shadow: none !important;
   transition: border-color 150ms ease;
 }
 [data-baseweb="select"] > div:first-child:hover {
-  border-color: #52525b !important;
+  border-color: #2C4080 !important;
 }
 [data-baseweb="select"] span,
 [data-baseweb="select"] div[role="button"] span,
 [data-baseweb="select"] > div > div > div {
   color: #fafafa !important;
-  font-family: 'DM Sans', sans-serif !important;
+  font-family: 'Inter', sans-serif !important;
   font-size: 13px !important;
 }
-[data-baseweb="select"] svg { fill: #71717a !important; }
+[data-baseweb="select"] svg { fill: #8094B4 !important; }
 [data-baseweb="popover"],
 [data-baseweb="popover"] > div {
-  background-color: #18181b !important;
-  border: 1px solid #27272a !important;
+  background-color: #1C2B50 !important;
+  border: 1px solid #1C3060 !important;
   border-radius: 6px !important;
   box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
 }
-[data-baseweb="menu"] { background-color: #18181b !important; }
+[data-baseweb="menu"] { background-color: #1C2B50 !important; }
 [data-baseweb="menu"] li,
 [data-baseweb="menu"] [role="option"] {
-  background-color: #18181b !important;
+  background-color: #1C2B50 !important;
   color: #fafafa !important;
-  font-family: 'DM Sans', sans-serif !important;
+  font-family: 'Inter', sans-serif !important;
   font-size: 13px !important;
 }
 [data-baseweb="menu"] li:hover,
-[data-baseweb="menu"] [role="option"]:hover { background-color: #27272a !important; }
+[data-baseweb="menu"] [role="option"]:hover { background-color: #1C3060 !important; }
 [data-baseweb="menu"] [aria-selected="true"] {
-  background-color: rgba(59,130,246,0.12) !important;
-  color: #3b82f6 !important;
+  background-color: rgba(200,149,58,0.12) !important;
+  color: #C8953A !important;
 }
 
 /* ── Text / password input ──────────────────────────────────────────────── */
 [data-testid="stTextInput"] input,
 input[type="password"] {
-  background-color: #18181b !important;
-  border: 1px solid #27272a !important;
+  background-color: #1C2B50 !important;
+  border: 1px solid #1C3060 !important;
   border-radius: 6px !important;
   color: #fafafa !important;
-  font-family: 'DM Sans', sans-serif !important;
+  font-family: 'Inter', sans-serif !important;
   font-size: 13px !important;
   padding: 10px 14px !important;
   box-shadow: none !important;
 }
-[data-testid="stTextInput"] input::placeholder { color: #71717a !important; }
+[data-testid="stTextInput"] input::placeholder { color: #8094B4 !important; }
 [data-testid="stTextInput"] input:focus {
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.25) !important;
+  border-color: #C8953A !important;
+  box-shadow: 0 0 0 3px rgba(200,149,58,0.25) !important;
   outline: none;
 }
 
 /* ── Buttons ────────────────────────────────────────────────────────────── */
 .stButton > button {
-  background: #3b82f6 !important;
+  background: #C8953A !important;
   color: #fff !important;
-  border: 1px solid #3b82f6 !important;
+  border: 1px solid #C8953A !important;
   border-radius: 6px !important;
-  font-family: 'DM Sans', sans-serif !important;
+  font-family: 'Inter', sans-serif !important;
   font-size: 13px !important;
   font-weight: 700 !important;
   letter-spacing: 0.02em !important;
@@ -138,48 +138,48 @@ input[type="password"] {
   transition: background 150ms ease, border-color 150ms ease !important;
 }
 .stButton > button:hover:not(:disabled) {
-  background: #2563eb !important;
-  border-color: #2563eb !important;
+  background: #B07828 !important;
+  border-color: #B07828 !important;
 }
 .stButton > button:disabled {
   background: transparent !important;
-  color: #71717a !important;
-  border-color: #27272a !important;
+  color: #8094B4 !important;
+  border-color: #1C3060 !important;
   cursor: default !important;
 }
 
 /* ── Download button ────────────────────────────────────────────────────── */
 [data-testid="stDownloadButton"] > button {
-  background: #3b82f6 !important;
+  background: #C8953A !important;
   color: #fff !important;
-  border: 1px solid #3b82f6 !important;
+  border: 1px solid #C8953A !important;
   border-radius: 6px !important;
   font-weight: 700 !important;
   font-size: 13px !important;
 }
 [data-testid="stDownloadButton"] > button:hover {
-  background: #2563eb !important;
-  border-color: #2563eb !important;
+  background: #B07828 !important;
+  border-color: #B07828 !important;
 }
 
 /* ── Checkbox ───────────────────────────────────────────────────────────── */
 [data-testid="stCheckbox"] label p,
 [data-testid="stCheckbox"] label span {
-  color: #a1a1aa !important;
+  color: #B0C4DE !important;
   font-size: 13px !important;
   line-height: 1.5 !important;
 }
 
 /* ── Expander ───────────────────────────────────────────────────────────── */
 [data-testid="stExpander"] {
-  border: 1px solid #27272a !important;
+  border: 1px solid #1C3060 !important;
   border-radius: 6px !important;
   overflow: visible;
-  background: #18181b !important;
+  background: #1C2B50 !important;
 }
 [data-testid="stExpander"] details > summary {
-  background-color: #18181b !important;
-  color: #a1a1aa !important;
+  background-color: #1C2B50 !important;
+  color: #B0C4DE !important;
   font-size: 12px !important;
   font-weight: 600 !important;
   padding: 10px 14px;
@@ -187,44 +187,44 @@ input[type="password"] {
 }
 [data-testid="stExpander"] details[open] > summary { border-radius: 6px 6px 0 0; }
 [data-testid="stExpander"] > div > div {
-  background-color: #111113 !important;
-  border-top: 1px solid #27272a !important;
+  background-color: #0A1636 !important;
+  border-top: 1px solid #1C3060 !important;
   padding: 12px 14px;
 }
 [data-testid="stExpander"] p, [data-testid="stExpander"] li {
-  color: #a1a1aa !important;
+  color: #B0C4DE !important;
   font-size: 12px !important;
   line-height: 1.7 !important;
 }
 
 /* ── Sidebar ────────────────────────────────────────────────────────────── */
 [data-testid="stSidebar"] {
-  background-color: #0d0d0f !important;
-  border-right: 1px solid #27272a !important;
+  background-color: #070F24 !important;
+  border-right: 1px solid #1C3060 !important;
 }
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] li,
 [data-testid="stSidebar"] span {
-  color: #a1a1aa !important;
+  color: #B0C4DE !important;
   font-size: 12px !important;
   line-height: 1.7 !important;
 }
 [data-testid="stSidebar"] strong,
 [data-testid="stSidebar"] b { color: #fafafa !important; }
 [data-testid="stSidebar"] a {
-  color: #3b82f6 !important;
+  color: #C8953A !important;
   text-decoration: none !important;
   font-weight: 600 !important;
 }
-[data-testid="stSidebar"] hr { border-color: #27272a !important; }
+[data-testid="stSidebar"] hr { border-color: #1C3060 !important; }
 
 /* ── HR ─────────────────────────────────────────────────────────────────── */
-hr { border: none !important; border-top: 1px solid #27272a !important; margin: 0 !important; }
+hr { border: none !important; border-top: 1px solid #1C3060 !important; margin: 0 !important; }
 
 /* ── Scrollbar ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: #09090b; }
-::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+::-webkit-scrollbar-track { background: #0A1636; }
+::-webkit-scrollbar-thumb { background: #1C3060; border-radius: 3px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -594,20 +594,20 @@ def build_pdf(results: dict, answers: dict) -> bytes:
     )
 
     # ── Colours ───────────────────────────────────────────────────────────────
-    GOLD         = colors.HexColor("#C9A84C")
-    DARK         = colors.HexColor("#1a1a2e")
-    MID          = colors.HexColor("#3a3a5c")
-    MUTED        = colors.HexColor("#71717a")
-    LIGHT_GREY   = colors.HexColor("#e4e4e7")
-    NEAR_WHITE   = colors.HexColor("#f9f9fb")
-    STRIPE       = colors.HexColor("#fafafa")
-    HEADER_BG    = colors.HexColor("#f4f4f5")
-    AMBER_BG     = colors.HexColor("#FFF8E7")
-    AMBER_BORDER = colors.HexColor("#F59E0B")
-    BLUE_BG      = colors.HexColor("#eff6ff")
-    BLUE_BORDER  = colors.HexColor("#bfdbfe")
-    BLUE_TEXT    = colors.HexColor("#1d4ed8")
-    WARM_TEXT    = colors.HexColor("#78350f")
+    GOLD         = colors.HexColor("#C8953A")
+    DARK         = colors.HexColor("#0A1636")
+    MID          = colors.HexColor("#1C2B50")
+    MUTED        = colors.HexColor("#8094B4")
+    LIGHT_GREY   = colors.HexColor("#C8D5E8")
+    NEAR_WHITE   = colors.HexColor("#F5F8FC")
+    STRIPE       = colors.HexColor("#F5F8FC")
+    HEADER_BG    = colors.HexColor("#EEF2F6")
+    AMBER_BG     = colors.HexColor("#FBF5E8")
+    AMBER_BORDER = colors.HexColor("#C8953A")
+    BLUE_BG      = colors.HexColor("#EEF2F6")
+    BLUE_BORDER  = colors.HexColor("#C8B080")
+    BLUE_TEXT    = colors.HexColor("#C8953A")
+    WARM_TEXT    = colors.HexColor("#6B3E15")
     C_GREEN      = colors.HexColor("#10b981")
     C_AMBER      = colors.HexColor("#f59e0b")
     C_RED        = colors.HexColor("#ef4444")
@@ -956,12 +956,12 @@ def build_pdf(results: dict, answers: dict) -> bytes:
 #     doc = SimpleDocTemplate(buf, pagesize=A4,
 #                             leftMargin=2*cm, rightMargin=2*cm,
 #                             topMargin=2*cm, bottomMargin=2*cm)
-#     ns_surface   = colors.HexColor("#111113")
+#     ns_surface   = colors.HexColor("#0A1636")
 #     ns_fg        = colors.HexColor("#fafafa")
-#     ns_fg_muted  = colors.HexColor("#a1a1aa")
-#     ns_fg_subtle = colors.HexColor("#71717a")
-#     ns_primary   = colors.HexColor("#3b82f6")
-#     ns_border    = colors.HexColor("#27272a")
+#     ns_fg_muted  = colors.HexColor("#B0C4DE")
+#     ns_fg_subtle = colors.HexColor("#8094B4")
+#     ns_primary   = colors.HexColor("#C8953A")
+#     ns_border    = colors.HexColor("#1C3060")
 #     band_clr = {"GREEN": colors.HexColor("#10b981"),
 #                 "AMBER": colors.HexColor("#f59e0b"),
 #                 "RED":   colors.HexColor("#ef4444")}
@@ -1007,7 +1007,7 @@ def build_pdf(results: dict, answers: dict) -> bytes:
 #     story += [mt, Spacer(1,0.5*cm)]
 # 
 #     bv_s = ParagraphStyle("bv",parent=styles["Normal"],textColor=bc,fontSize=18,spaceAfter=4,fontName="Helvetica-Bold")
-#     score_cell = [Paragraph("SCORE",label_s), Paragraph(f'{score} <font size="12" color="#71717a">/ {MAX_SCORE}</font>',big_s)]
+#     score_cell = [Paragraph("SCORE",label_s), Paragraph(f'{score} <font size="12" color="#8094B4">/ {MAX_SCORE}</font>',big_s)]
 #     band_cell  = [Paragraph("RISK BAND",label_s), Paragraph(band,bv_s),
 #                   Paragraph(band_label,ParagraphStyle("bl",parent=styles["Normal"],textColor=ns_fg_subtle,fontSize=9))]
 #     cards = Table([[score_cell,band_cell]],colWidths=[8*cm,9*cm])
@@ -1133,21 +1133,21 @@ if not st.session_state.authed:
     _, pw_col, _ = st.columns([1, 2.2, 1])
     with pw_col:
         st.markdown("""
-        <div style="background:#111113;border:1px solid #27272a;border-radius:10px;
+        <div style="background:#0A1636;border:1px solid #1C3060;border-radius:10px;
                     padding:40px 36px 28px;text-align:center;margin-bottom:16px;">
           <div style="margin-bottom:20px;">
             <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="22" cy="22" r="20" stroke="#3b82f6" stroke-width="2" opacity="0.3"/>
-              <circle cx="22" cy="22" r="3" fill="#3b82f6"/>
-              <line x1="22" y1="2" x2="22" y2="10" stroke="#c9a84c" stroke-width="2" stroke-linecap="round"/>
-              <line x1="22" y1="34" x2="22" y2="42" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
-              <line x1="2" y1="22" x2="10" y2="22" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
-              <line x1="34" y1="22" x2="42" y2="22" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+              <circle cx="22" cy="22" r="20" stroke="#C8953A" stroke-width="2" opacity="0.3"/>
+              <circle cx="22" cy="22" r="3" fill="#C8953A"/>
+              <line x1="22" y1="2" x2="22" y2="10" stroke="#C8953A" stroke-width="2" stroke-linecap="round"/>
+              <line x1="22" y1="34" x2="22" y2="42" stroke="#C8953A" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+              <line x1="2" y1="22" x2="10" y2="22" stroke="#C8953A" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+              <line x1="34" y1="22" x2="42" y2="22" stroke="#C8953A" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
             </svg>
           </div>
-          <div style="font-family:'DM Serif Display',Georgia,serif;font-size:24px;
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;
                       color:#fafafa;margin-bottom:6px;">Supplier Readiness</div>
-          <div style="font-size:12px;color:#71717a;line-height:1.6;margin-bottom:28px;">
+          <div style="font-size:12px;color:#8094B4;line-height:1.6;margin-bottom:28px;">
             CSRD-aligned diagnostic for SME and supply chain suppliers<br>
             <em>Beta access only</em>
           </div>
@@ -1163,9 +1163,9 @@ if not st.session_state.authed:
             else:
                 st.error("Incorrect password. Contact your administrator.")
         st.markdown(
-            f'<div style="text-align:center;margin-top:16px;font-size:12px;color:#71717a;">'
+            f'<div style="text-align:center;margin-top:16px;font-size:12px;color:#8094B4;">'
             f'<a href="mailto:{BETA_EMAIL}?subject=Beta access request" '
-            f'style="color:#3b82f6;font-weight:600;text-decoration:none;">Request beta access</a></div>',
+            f'style="color:#C8953A;font-weight:600;text-decoration:none;">Request beta access</a></div>',
             unsafe_allow_html=True,
         )
     st.stop()
@@ -1179,7 +1179,7 @@ is_results = cur_step == len(SECTIONS)
 
 with st.sidebar:
     st.markdown(
-        '<p style="font-family:\'DM Serif Display\',Georgia,serif;font-size:16px;'
+        '<p style="font-family:\'Space Grotesk\',sans-serif;font-size:16px;'
         'color:#fafafa;margin-bottom:12px;">About this tool</p>',
         unsafe_allow_html=True,
     )
@@ -1205,15 +1205,15 @@ risks, and distinguishes between suppliers who need support, monitoring, or esca
     st.markdown("---")
     if not is_results:
         st.markdown('<p style="font-size:10px;font-weight:600;letter-spacing:0.15em;'
-                    'text-transform:uppercase;color:#71717a;margin-bottom:4px;">Your progress</p>',
+                    'text-transform:uppercase;color:#8094B4;margin-bottom:4px;">Your progress</p>',
                     unsafe_allow_html=True)
         for i, s in enumerate(SECTIONS):
             if i < cur_step:
                 dot, clr, fw = "●", "#10b981", "400"
             elif i == cur_step:
-                dot, clr, fw = "●", "#3b82f6", "600"
+                dot, clr, fw = "●", "#C8953A", "600"
             else:
-                dot, clr, fw = "○", "#71717a", "400"
+                dot, clr, fw = "○", "#8094B4", "400"
             st.markdown(
                 f'<div style="font-size:13px;color:{clr};font-weight:{fw};padding:4px 0;">'
                 f'{dot}&nbsp;&nbsp;{s["label"]}</div>',
@@ -1225,11 +1225,11 @@ risks, and distinguishes between suppliers who need support, monitoring, or esca
                     unsafe_allow_html=True)
         st.markdown("---")
     st.markdown('<p style="font-size:10px;font-weight:600;letter-spacing:0.15em;'
-                'text-transform:uppercase;color:#71717a;margin-bottom:4px;">Contact</p>',
+                'text-transform:uppercase;color:#8094B4;margin-bottom:4px;">Contact</p>',
                 unsafe_allow_html=True)
     st.markdown("[navisignal.app](https://navisignal.app)  \n[hello@navisignal.app](mailto:hello@navisignal.app)")
     st.markdown("---")
-    st.markdown('<p style="font-size:11px;color:#71717a;font-style:italic;line-height:1.6;">'
+    st.markdown('<p style="font-size:11px;color:#8094B4;font-style:italic;line-height:1.6;">'
                 'This is a decision support tool. It is not legal advice or a final compliance determination.</p>',
                 unsafe_allow_html=True)
 
@@ -1238,19 +1238,19 @@ risks, and distinguishes between suppliers who need support, monitoring, or esca
 # HEADER
 # ═══════════════════════════════════════════════════════════════════════════════
 st.markdown("""
-<div style="border-bottom:1px solid #27272a;padding:14px 0 14px;
+<div style="border-bottom:1px solid #1C3060;padding:14px 0 14px;
             display:flex;align-items:center;justify-content:space-between;
             margin-bottom:4px;">
-  <div style="font-family:'DM Serif Display',Georgia,serif;font-size:18px;color:#fafafa;">
+  <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;color:#fafafa;">
     Navisignal
-    <span style="font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;
-                 letter-spacing:0.1em;text-transform:uppercase;color:#c9a84c;
-                 border:1px solid #c9a84c;border-radius:9999px;
+    <span style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;
+                 letter-spacing:0.1em;text-transform:uppercase;color:#C8953A;
+                 border:1px solid #C8953A;border-radius:9999px;
                  padding:2px 8px;margin-left:8px;">Beta</span>
   </div>
   <div style="text-align:right;">
-    <div style="font-family:'DM Serif Display',Georgia,serif;font-size:15px;color:#fafafa;">Supplier Readiness Diagnostic</div>
-    <div style="font-size:11px;color:#71717a;margin-top:1px;">CSRD-aligned &middot; SME &amp; supply chain</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;color:#fafafa;">Supplier Readiness Diagnostic</div>
+    <div style="font-size:11px;color:#8094B4;margin-top:1px;">CSRD-aligned &middot; SME &amp; supply chain</div>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -1265,20 +1265,20 @@ if not is_results:
     pct        = int((answered_q / total_q) * 100)
 
     st.markdown(
-        f'<div style="padding:10px 0 14px;border-bottom:1px solid #1f1f23;margin-bottom:20px;">'
+        f'<div style="padding:10px 0 14px;border-bottom:1px solid #0F1B3A;margin-bottom:20px;">'
         f'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
-        f'<span style="font-size:11px;color:#71717a;">{SECTIONS[cur_step]["label"]} — step {cur_step+1} of {len(SECTIONS)}</span>'
-        f'<span style="font-size:11px;color:#3b82f6;font-weight:600;">{pct}% complete</span>'
+        f'<span style="font-size:11px;color:#8094B4;">{SECTIONS[cur_step]["label"]} — step {cur_step+1} of {len(SECTIONS)}</span>'
+        f'<span style="font-size:11px;color:#C8953A;font-weight:600;">{pct}% complete</span>'
         f'</div>'
-        f'<div style="height:3px;background:#27272a;border-radius:9999px;overflow:hidden;">'
-        f'<div style="height:3px;background:#3b82f6;border-radius:9999px;'
+        f'<div style="height:3px;background:#1C3060;border-radius:9999px;overflow:hidden;">'
+        f'<div style="height:3px;background:#C8953A;border-radius:9999px;'
         f'width:{pct}%;transition:width 0.4s ease;"></div></div></div>',
         unsafe_allow_html=True,
     )
 
     dots = '<div style="display:flex;gap:6px;margin-bottom:28px;">'
     for i in range(len(SECTIONS)):
-        c = "#10b981" if i < cur_step else ("#3b82f6" if i == cur_step else "#27272a")
+        c = "#10b981" if i < cur_step else ("#C8953A" if i == cur_step else "#1C3060")
         dots += f'<div style="flex:1;height:3px;border-radius:9999px;background:{c};"></div>'
     dots += '</div>'
     st.markdown(dots, unsafe_allow_html=True)
@@ -1293,17 +1293,17 @@ if not is_results:
 
     st.markdown(
         f'<div style="font-size:11px;font-weight:600;letter-spacing:0.18em;'
-        f'text-transform:uppercase;color:#3b82f6;margin-bottom:6px;">'
+        f'text-transform:uppercase;color:#C8953A;margin-bottom:6px;">'
         f'Section {cur_step+1} of {len(SECTIONS)}</div>',
         unsafe_allow_html=True,
     )
     st.markdown(
-        f'<h1 style="font-family:\'DM Serif Display\',Georgia,serif;font-size:28px;'
+        f'<h1 style="font-family:\'Space Grotesk\',sans-serif;font-size:28px;'
         f'color:#fafafa;line-height:1.2;margin-bottom:6px;font-weight:400;">{section["label"]}</h1>',
         unsafe_allow_html=True,
     )
     st.markdown(
-        f'<p style="font-size:13px;color:#a1a1aa;line-height:1.6;margin-bottom:24px;">{section["subtitle"]}</p>',
+        f'<p style="font-size:13px;color:#B0C4DE;line-height:1.6;margin-bottom:24px;">{section["subtitle"]}</p>',
         unsafe_allow_html=True,
     )
 
@@ -1334,7 +1334,7 @@ if not is_results:
         st.markdown(
             f'<div style="font-size:13px;font-weight:500;color:{lbl_color};'
             f'margin-bottom:4px;margin-top:4px;">'
-            f'{q["text"]} <span style="color:#3b82f6;">⁎</span></div>',
+            f'{q["text"]} <span style="color:#C8953A;">⁎</span></div>',
             unsafe_allow_html=True,
         )
 
@@ -1360,16 +1360,16 @@ if not is_results:
             assumptions = SECTOR_ASSUMPTIONS.get(selected)
             if assumptions:
                 bullets = "".join(
-                    f'<li style="font-size:12px;color:#a1a1aa;line-height:1.65;'
+                    f'<li style="font-size:12px;color:#B0C4DE;line-height:1.65;'
                     f'margin-bottom:3px;">{a}</li>'
                     for a in assumptions
                 )
                 st.markdown(
-                    f'<div style="background:rgba(59,130,246,0.06);'
-                    f'border-left:2px solid #3b82f6;border-radius:0 6px 6px 0;'
+                    f'<div style="background:rgba(200,149,58,0.06);'
+                    f'border-left:2px solid #C8953A;border-radius:0 6px 6px 0;'
                     f'padding:10px 14px;margin-top:4px;margin-bottom:4px;">'
                     f'<div style="font-size:10px;font-weight:600;letter-spacing:0.1em;'
-                    f'text-transform:uppercase;color:#3b82f6;margin-bottom:6px;">'
+                    f'text-transform:uppercase;color:#C8953A;margin-bottom:6px;">'
                     f'Sector baseline</div>'
                     f'<ul style="padding-left:14px;margin:0;">{bullets}</ul></div>',
                     unsafe_allow_html=True,
@@ -1378,12 +1378,12 @@ if not is_results:
         st.markdown('<div style="height:6px;"></div>', unsafe_allow_html=True)
 
     st.markdown(
-        '<hr style="border:none;border-top:1px solid #27272a;margin:24px 0 16px;">',
+        '<hr style="border:none;border-top:1px solid #1C3060;margin:24px 0 16px;">',
         unsafe_allow_html=True,
     )
     answered_sec = sum(1 for q in section_qs if st.session_state.answers.get(q["key"]))
     st.markdown(
-        f'<div style="text-align:center;font-size:11px;color:#71717a;margin-bottom:14px;">'
+        f'<div style="text-align:center;font-size:11px;color:#8094B4;margin-bottom:14px;">'
         f'{answered_sec} / {len(section_qs)} answered in this section</div>',
         unsafe_allow_html=True,
     )
@@ -1431,49 +1431,49 @@ else:
     ans        = st.session_state.answers
 
     BAND_C = {"GREEN": "#10b981", "AMBER": "#f59e0b", "RED": "#ef4444"}
-    bc          = BAND_C.get(band, "#a1a1aa")
+    bc          = BAND_C.get(band, "#B0C4DE")
     needle_pct  = min(int((score / MAX_SCORE) * 100), 100)
     meta_parts  = [p for p in [ans.get("sector",""), ans.get("company_size",""), ans.get("operates_in_eu","")] if p]
 
     st.markdown(
         '<div style="font-size:11px;font-weight:600;letter-spacing:0.18em;'
-        'text-transform:uppercase;color:#3b82f6;margin-bottom:6px;">Assessment complete</div>',
+        'text-transform:uppercase;color:#C8953A;margin-bottom:6px;">Assessment complete</div>',
         unsafe_allow_html=True,
     )
     st.markdown(
-        '<h1 style="font-family:\'DM Serif Display\',Georgia,serif;font-size:28px;'
+        '<h1 style="font-family:\'Space Grotesk\',sans-serif;font-size:28px;'
         'color:#fafafa;line-height:1.2;margin-bottom:6px;font-weight:400;">Your readiness profile</h1>',
         unsafe_allow_html=True,
     )
     if meta_parts:
         st.markdown(
-            f'<p style="font-size:13px;color:#a1a1aa;margin-bottom:24px;">{ " · ".join(meta_parts) }</p>',
+            f'<p style="font-size:13px;color:#B0C4DE;margin-bottom:24px;">{ " · ".join(meta_parts) }</p>',
             unsafe_allow_html=True,
         )
 
     col_s, col_b = st.columns([1, 2])
     with col_s:
         st.markdown(
-            f'<div style="background:#18181b;border:1px solid #27272a;border-radius:6px;padding:16px 18px;">'
+            f'<div style="background:#1C2B50;border:1px solid #1C3060;border-radius:6px;padding:16px 18px;">'
             f'<div style="font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;'
-            f'color:#71717a;margin-bottom:8px;">Score</div>'
-            f'<div style="font-family:\'DM Serif Display\',Georgia,serif;font-size:42px;'
+            f'color:#8094B4;margin-bottom:8px;">Score</div>'
+            f'<div style="font-family:\'Space Grotesk\',sans-serif;font-size:42px;'
             f'color:#fafafa;line-height:1;">'
-            f'{score}<span style="font-size:16px;color:#71717a;"> / {MAX_SCORE}</span></div></div>',
+            f'{score}<span style="font-size:16px;color:#8094B4;"> / {MAX_SCORE}</span></div></div>',
             unsafe_allow_html=True,
         )
     with col_b:
         st.markdown(
-            f'<div style="background:#18181b;border:1px solid #27272a;border-radius:6px;padding:16px 18px;">'
+            f'<div style="background:#1C2B50;border:1px solid #1C3060;border-radius:6px;padding:16px 18px;">'
             f'<div style="font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;'
-            f'color:#71717a;margin-bottom:8px;">Risk band</div>'
-            f'<div style="font-family:\'DM Serif Display\',Georgia,serif;font-size:28px;'
+            f'color:#8094B4;margin-bottom:8px;">Risk band</div>'
+            f'<div style="font-family:\'Space Grotesk\',sans-serif;font-size:28px;'
             f'color:{bc};line-height:1;margin-bottom:4px;">{band}</div>'
-            f'<div style="font-size:11px;color:#71717a;margin-bottom:10px;">{band_label}</div>'
+            f'<div style="font-size:11px;color:#8094B4;margin-bottom:10px;">{band_label}</div>'
             f'<div style="height:6px;border-radius:9999px;position:relative;margin-bottom:6px;'
             f'background:linear-gradient(to right,#10b981 0%,#10b981 30%,#f59e0b 30%,#f59e0b 65%,#ef4444 65%);">'
             f'<div style="position:absolute;top:50%;left:{needle_pct}%;transform:translate(-50%,-50%);'
-            f'width:14px;height:14px;border-radius:50%;background:#fafafa;border:2px solid #09090b;"></div></div>'
+            f'width:14px;height:14px;border-radius:50%;background:#fafafa;border:2px solid #0A1636;"></div></div>'
             f'<div style="display:flex;justify-content:space-between;font-size:9px;font-weight:600;letter-spacing:0.08em;">'
             f'<span style="color:#10b981;">Green</span>'
             f'<span style="color:#f59e0b;">Amber</span>'
@@ -1484,14 +1484,14 @@ else:
     if tags:
         st.markdown('<div style="height:16px;"></div>', unsafe_allow_html=True)
         st.markdown(
-            '<div style="font-size:11px;font-weight:600;color:#71717a;margin-bottom:8px;'
+            '<div style="font-size:11px;font-weight:600;color:#8094B4;margin-bottom:8px;'
             'letter-spacing:0.05em;text-transform:uppercase;">Flags triggered</div>',
             unsafe_allow_html=True,
         )
         pills = "".join(
             f'<span style="display:inline-block;padding:3px 10px;border-radius:9999px;'
             f'font-size:10px;font-weight:600;letter-spacing:0.05em;'
-            f'background:rgba(59,130,246,0.12);color:#3b82f6;margin:2px 4px 2px 0;">'
+            f'background:rgba(200,149,58,0.12);color:#C8953A;margin:2px 4px 2px 0;">'
             f'{TAG_LABELS.get(t,t)}</span>'
             for t in tags
         )
@@ -1499,43 +1499,43 @@ else:
 
         st.markdown('<div style="height:12px;"></div>', unsafe_allow_html=True)
         st.markdown(
-            '<div style="font-size:11px;font-weight:600;color:#71717a;margin-bottom:8px;'
+            '<div style="font-size:11px;font-weight:600;color:#8094B4;margin-bottom:8px;'
             'letter-spacing:0.05em;text-transform:uppercase;">Tag definitions</div>',
             unsafe_allow_html=True,
         )
         tag_def_rows = "".join(
             f'<tr>'
             f'<td style="padding:6px 10px 6px 0;vertical-align:top;white-space:nowrap;">'
-            f'<span style="font-size:10px;font-weight:600;color:#3b82f6;">{TAG_LABELS.get(t,t)}</span></td>'
-            f'<td style="padding:6px 0;font-size:11px;color:#a1a1aa;line-height:1.55;">{TAG_DEFS.get(t,"")}</td>'
+            f'<span style="font-size:10px;font-weight:600;color:#C8953A;">{TAG_LABELS.get(t,t)}</span></td>'
+            f'<td style="padding:6px 0;font-size:11px;color:#B0C4DE;line-height:1.55;">{TAG_DEFS.get(t,"")}</td>'
             f'</tr>'
             for t in tags
         )
         st.markdown(
-            f'<table style="width:100%;border-collapse:collapse;background:#111113;'
-            f'border:1px solid #27272a;border-radius:6px;overflow:hidden;">'
+            f'<table style="width:100%;border-collapse:collapse;background:#0A1636;'
+            f'border:1px solid #1C3060;border-radius:6px;overflow:hidden;">'
             f'{tag_def_rows}</table>',
             unsafe_allow_html=True,
         )
 
     st.markdown(
-        f'<div style="background:#18181b;border-left:2px solid {bc};'
+        f'<div style="background:#1C2B50;border-left:2px solid {bc};'
         f'border-radius:0 6px 6px 0;padding:14px 16px;margin-top:16px;margin-bottom:24px;">'
         f'<div style="font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;'
-        f'color:#71717a;margin-bottom:6px;">Interpretation</div>'
-        f'<p style="font-size:13px;color:#a1a1aa;line-height:1.65;margin:0;">{interp}</p></div>',
+        f'color:#8094B4;margin-bottom:6px;">Interpretation</div>'
+        f'<p style="font-size:13px;color:#B0C4DE;line-height:1.65;margin:0;">{interp}</p></div>',
         unsafe_allow_html=True,
     )
 
-    st.markdown('<hr style="border:none;border-top:1px solid #27272a;margin:28px 0;">', unsafe_allow_html=True)
+    st.markdown('<hr style="border:none;border-top:1px solid #1C3060;margin:28px 0;">', unsafe_allow_html=True)
 
     st.markdown(
         '<div style="font-size:11px;font-weight:600;letter-spacing:0.18em;'
-        'text-transform:uppercase;color:#3b82f6;margin-bottom:4px;">Action checklist</div>',
+        'text-transform:uppercase;color:#C8953A;margin-bottom:4px;">Action checklist</div>',
         unsafe_allow_html=True,
     )
     st.markdown(
-        '<h2 style="font-family:\'DM Serif Display\',Georgia,serif;font-size:20px;'
+        '<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:20px;'
         'font-weight:400;color:#fafafa;margin-bottom:16px;">Recommended next steps</h2>',
         unsafe_allow_html=True,
     )
@@ -1548,7 +1548,7 @@ else:
             for assumption in SECTOR_ASSUMPTIONS[sector_val]:
                 st.markdown(f"- {assumption}")
 
-    st.markdown('<hr style="border:none;border-top:1px solid #27272a;margin:28px 0;">', unsafe_allow_html=True)
+    st.markdown('<hr style="border:none;border-top:1px solid #1C3060;margin:28px 0;">', unsafe_allow_html=True)
 
     col_dl, col_rs = st.columns([2, 1])
     with col_dl:
@@ -1570,26 +1570,26 @@ else:
             st.rerun()
 
     st.markdown(
-        '<div style="font-size:11px;color:#71717a;line-height:1.6;margin:24px 0 8px;font-style:italic;">'
+        '<div style="font-size:11px;color:#8094B4;line-height:1.6;margin:24px 0 8px;font-style:italic;">'
         'This is a decision support tool. It is not legal advice or a final compliance determination. '
         'Generated by Navisignal Supplier Readiness Diagnostic.</div>',
         unsafe_allow_html=True,
     )
 
     st.markdown("""
-    <div style="border-top:1px solid #27272a;padding:28px 0 40px;text-align:center;line-height:1.7;">
-      <div style="font-size:12px;color:#71717a;margin-bottom:4px;">
+    <div style="border-top:1px solid #1C3060;padding:28px 0 40px;text-align:center;line-height:1.7;">
+      <div style="font-size:12px;color:#8094B4;margin-bottom:4px;">
         Supplier Readiness Diagnostic is a product of
-        <strong style="color:#a1a1aa;">Navisignal</strong> — practical tools for complex decisions.
+        <strong style="color:#B0C4DE;">Navisignal</strong> — practical tools for complex decisions.
       </div>
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:8px;flex-wrap:wrap;">
         <a href="https://navisignal.app" target="_blank"
-           style="color:#3b82f6;text-decoration:none;font-weight:600;font-size:12px;">navisignal.app</a>
-        <span style="color:#27272a;font-size:12px;">&middot;</span>
+           style="color:#C8953A;text-decoration:none;font-weight:600;font-size:12px;">navisignal.app</a>
+        <span style="color:#1C3060;font-size:12px;">&middot;</span>
         <a href="mailto:hello@navisignal.app"
-           style="color:#3b82f6;text-decoration:none;font-weight:600;font-size:12px;">hello@navisignal.app</a>
+           style="color:#C8953A;text-decoration:none;font-weight:600;font-size:12px;">hello@navisignal.app</a>
       </div>
-      <div style="margin-top:12px;font-size:10px;color:#71717a;opacity:0.5;letter-spacing:0.1em;">
+      <div style="margin-top:12px;font-size:10px;color:#8094B4;opacity:0.5;letter-spacing:0.1em;">
         Evidence. Structure. Action.
       </div>
     </div>
