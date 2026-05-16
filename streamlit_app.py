@@ -623,7 +623,7 @@ def build_pdf(results: dict, answers: dict) -> bytes:
 
     brand_s    = ps("brand",    fontName="Helvetica-Bold", fontSize=13, textColor=DARK)
     hdr_right_s= ps("hdrr",    fontName="Helvetica",      fontSize=7,  textColor=MUTED, alignment=TA_RIGHT, leading=11)
-    title_s    = ps("title",   fontName="Helvetica-Bold", fontSize=20, textColor=DARK, spaceAfter=3)
+    title_s    = ps("title",   fontName="Helvetica-Bold", fontSize=20, textColor=DARK, spaceAfter=10)
     subtitle_s = ps("sub",     fontName="Helvetica",      fontSize=9,  textColor=MUTED)
     label_s    = ps("lbl",     fontName="Helvetica-Bold", fontSize=7,  textColor=MUTED, leading=10)
     big_num_s  = ps("bignum",  fontName="Helvetica-Bold", fontSize=30, textColor=DARK)
@@ -1134,7 +1134,7 @@ if not st.session_state.authed:
     with pw_col:
         st.markdown("""
         <div style="background:#111113;border:1px solid #27272a;border-radius:10px;
-                    padding:40px 36px 28px;text-align:center;">
+                    padding:40px 36px 28px;text-align:center;margin-bottom:16px;">
           <div style="margin-bottom:20px;">
             <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="22" cy="22" r="20" stroke="#3b82f6" stroke-width="2" opacity="0.3"/>
@@ -1546,11 +1546,7 @@ else:
     if sector_val and sector_val in SECTOR_ASSUMPTIONS:
         with st.expander(f"Sector baseline: {sector_val}"):
             for assumption in SECTOR_ASSUMPTIONS[sector_val]:
-                st.markdown(
-                    f'<li style="font-size:12px;color:#a1a1aa;line-height:1.7;'
-                    f'list-style:disc;margin-left:16px;margin-bottom:3px;">{assumption}</li>',
-                    unsafe_allow_html=True,
-                )
+                st.markdown(f"- {assumption}")
 
     st.markdown('<hr style="border:none;border-top:1px solid #27272a;margin:28px 0;">', unsafe_allow_html=True)
 
