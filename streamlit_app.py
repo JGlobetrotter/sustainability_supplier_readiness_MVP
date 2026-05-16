@@ -174,7 +174,7 @@ input[type="password"] {
 [data-testid="stExpander"] {
   border: 1px solid #27272a !important;
   border-radius: 6px !important;
-  overflow: hidden;
+  overflow: visible;
   background: #18181b !important;
 }
 [data-testid="stExpander"] details > summary {
@@ -424,16 +424,16 @@ TAG_DEFS = {
 }
 
 TAG_WEIGHTS = {
-    "CSRD_CASCADE_SIGNAL":        1,
-    "EU_EXPOSURE_NON_EU":         1,
-    "POLICY_LIGHT":               2,
-    "HRDD_RELEVANCE_HIGH":        2,
-    "BUYER_OPACITY_RISK":         1,
+    "CSRD_CASCADE_SIGNAL":        2,
+    "EU_EXPOSURE_NON_EU":         2,
+    "BUYER_OPACITY_RISK":         2,
+    "HRDD_RELEVANCE_HIGH":        1,
+    "OWNER_GAP":                  1,
     "ENVIRONMENTAL_BASELINE_GAP": 1,
-    "DOCUMENTATION_LIGHT":        1,
-    "SUPPLIER_CONFIDENCE_LOW":    1,
-    "OWNER_GAP":                  2,
+    "POLICY_LIGHT":               1,
     "DUAL_ROLE_PRESSURE":         1,
+    "SUPPLIER_CONFIDENCE_LOW":    1,
+    "DOCUMENTATION_LIGHT":        0,
 }
 
 TAG_LABELS = {
@@ -500,7 +500,46 @@ def derive_tags(a: dict) -> list:
 
 
 def run_screening(tags: list) -> dict:
-    score = sum(TAG_WEIGHTS.get(t, 0) for t in tags)
+    tag_set = set(tags)
+    score   = 0
+    reasons = []
+
+    if "CSRD_CASCADE_SIGNAL" in tag_set:
+        score += 2
+        reasons.append("CSRD readiness activities strongly recommended.")
+
+    if "EU_EXPOSURE_NON_EU" in tag_set:
+        score += 2
+        reasons.append("EU business links suggest additional CSRD vulnerability.")
+
+    if "BUYER_OPACITY_RISK" in tag_set:
+        score += 2
+        reasons.append("Buyers are expressing conflicting or confusing requests.")
+
+    if "HRDD_RELEVANCE_HIGH" in tag_set:
+        score += 1
+        reasons.append("Human rights and labor strengthening recommended.")
+
+    if "OWNER_GAP" in tag_set:
+        score += 1
+        reasons.append("Responsibility gaps detected.")
+
+    if "ENVIRONMENTAL_BASELINE_GAP" in tag_set:
+        score += 1
+        reasons.append("Environmental baseline processes missing.")
+
+    if "POLICY_LIGHT" in tag_set:
+        score += 1
+        reasons.append("Policy documentation is light or missing.")
+
+    if "DUAL_ROLE_PRESSURE" in tag_set:
+        score += 1
+        reasons.append("Multiple pressure signals detected.")
+
+    if "SUPPLIER_CONFIDENCE_LOW" in tag_set:
+        score += 1
+        reasons.append("Low confidence suggests external support may help.")
+
     if score <= 2:
         band, band_label = "GREEN", "Low risk"
         interpretation = (
@@ -520,22 +559,25 @@ def run_screening(tags: list) -> dict:
             "get caught flat-footed during buyer requests, audits, or tender processes. "
             "Move quickly to establish ownership, baseline policies, and auditable evidence."
         )
+
     steps = []
-    if "OWNER_GAP" in tags:
+    if "OWNER_GAP" in tag_set:
         steps.append("Assign a single accountable owner for sustainability and compliance requests — by name and role.")
-    if "POLICY_LIGHT" in tags:
+    if "POLICY_LIGHT" in tag_set:
         steps.append("Draft a minimum policy set covering environment and labor/human rights, with version control and sign-off.")
-    if "DOCUMENTATION_LIGHT" in tags:
+    if "DOCUMENTATION_LIGHT" in tag_set:
         steps.append("Start a basic data baseline: energy, emissions assumptions, water, and waste in a simple tracker.")
-    if "HRDD_RELEVANCE_HIGH" in tags:
+    if "HRDD_RELEVANCE_HIGH" in tag_set:
         steps.append("Map human rights and labor risk in sourcing countries and set up a lightweight due diligence checklist.")
-    if "CSRD_CASCADE_SIGNAL" in tags or "BUYER_OPACITY_RISK" in tags:
+    if "CSRD_CASCADE_SIGNAL" in tag_set or "BUYER_OPACITY_RISK" in tag_set:
         steps.append("Create a buyer-response pack: 1-page overview + evidence folder + standard Q&A for incoming requests.")
-    if "EU_EXPOSURE_NON_EU" in tags:
+    if "EU_EXPOSURE_NON_EU" in tag_set:
         steps.append("Identify EU-linked customers and expected reporting asks. Align your evidence to what they request most.")
     steps.append("Package all outputs into a reusable Readiness Folder — policies, tracker, evidence, Q&A — for future requests.")
+
     return {"score": score, "band": band, "band_label": band_label,
-            "interpretation": interpretation, "next_steps": steps, "tags": tags}
+            "interpretation": interpretation, "next_steps": steps,
+            "reasons": reasons, "tags": tags}
 
 
 def build_pdf(results: dict, answers: dict) -> bytes:
@@ -581,7 +623,7 @@ def build_pdf(results: dict, answers: dict) -> bytes:
 
     brand_s    = ps("brand",    fontName="Helvetica-Bold", fontSize=13, textColor=DARK)
     hdr_right_s= ps("hdrr",    fontName="Helvetica",      fontSize=7,  textColor=MUTED, alignment=TA_RIGHT, leading=11)
-    title_s    = ps("title",   fontName="Helvetica-Bold", fontSize=20, textColor=DARK, spaceAfter=3)
+    title_s    = ps("title",   fontName="Helvetica-Bold", fontSize=20, textColor=DARK, leading=26, spaceAfter=10)
     subtitle_s = ps("sub",     fontName="Helvetica",      fontSize=9,  textColor=MUTED)
     label_s    = ps("lbl",     fontName="Helvetica-Bold", fontSize=7,  textColor=MUTED, leading=10)
     big_num_s  = ps("bignum",  fontName="Helvetica-Bold", fontSize=30, textColor=DARK)
@@ -1092,7 +1134,7 @@ if not st.session_state.authed:
     with pw_col:
         st.markdown("""
         <div style="background:#111113;border:1px solid #27272a;border-radius:10px;
-                    padding:40px 36px 28px;text-align:center;">
+                    padding:40px 36px 28px;text-align:center;margin-bottom:16px;">
           <div style="margin-bottom:20px;">
             <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="22" cy="22" r="20" stroke="#3b82f6" stroke-width="2" opacity="0.3"/>
@@ -1111,7 +1153,7 @@ if not st.session_state.authed:
           </div>
         </div>
         """, unsafe_allow_html=True)
-
+        st.write("")
         pwd = st.text_input("", type="password", placeholder="Enter access password…",
                             label_visibility="collapsed")
         if st.button("Enter →", use_container_width=True):
@@ -1504,11 +1546,7 @@ else:
     if sector_val and sector_val in SECTOR_ASSUMPTIONS:
         with st.expander(f"Sector baseline: {sector_val}"):
             for assumption in SECTOR_ASSUMPTIONS[sector_val]:
-                st.markdown(
-                    f'<li style="font-size:12px;color:#a1a1aa;line-height:1.7;'
-                    f'list-style:disc;margin-left:16px;margin-bottom:3px;">{assumption}</li>',
-                    unsafe_allow_html=True,
-                )
+                st.markdown(f"- {assumption}")
 
     st.markdown('<hr style="border:none;border-top:1px solid #27272a;margin:28px 0;">', unsafe_allow_html=True)
 
