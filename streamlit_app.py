@@ -174,7 +174,7 @@ input[type="password"] {
 [data-testid="stExpander"] {
   border: 1px solid #27272a !important;
   border-radius: 6px !important;
-  overflow: hidden;
+  overflow: visible;
   background: #18181b !important;
 }
 [data-testid="stExpander"] details > summary {
@@ -623,7 +623,7 @@ def build_pdf(results: dict, answers: dict) -> bytes:
 
     brand_s    = ps("brand",    fontName="Helvetica-Bold", fontSize=13, textColor=DARK)
     hdr_right_s= ps("hdrr",    fontName="Helvetica",      fontSize=7,  textColor=MUTED, alignment=TA_RIGHT, leading=11)
-    title_s    = ps("title",   fontName="Helvetica-Bold", fontSize=20, textColor=DARK, spaceAfter=10)
+    title_s    = ps("title",   fontName="Helvetica-Bold", fontSize=20, textColor=DARK, leading=26, spaceAfter=10)
     subtitle_s = ps("sub",     fontName="Helvetica",      fontSize=9,  textColor=MUTED)
     label_s    = ps("lbl",     fontName="Helvetica-Bold", fontSize=7,  textColor=MUTED, leading=10)
     big_num_s  = ps("bignum",  fontName="Helvetica-Bold", fontSize=30, textColor=DARK)
@@ -1153,7 +1153,7 @@ if not st.session_state.authed:
           </div>
         </div>
         """, unsafe_allow_html=True)
-
+        st.write("")
         pwd = st.text_input("", type="password", placeholder="Enter access password…",
                             label_visibility="collapsed")
         if st.button("Enter →", use_container_width=True):
