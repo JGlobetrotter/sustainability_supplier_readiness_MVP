@@ -410,6 +410,19 @@ SECTOR_ASSUMPTIONS = {
     ],
 }
 
+TAG_DEFS = {
+    "CSRD_CASCADE_SIGNAL":        "Buyer has referenced CSRD / EU reporting pressure.",
+    "BUYER_OPACITY_RISK":         "Drivers/requirements unclear; risk of guessing wrong.",
+    "HRDD_RELEVANCE_HIGH":        "Human rights due diligence is likely a buyer focus, even if not explicitly stated.",
+    "OWNER_GAP":                  "No clear internal owner for sustainability / social / environmental topics.",
+    "ENVIRONMENTAL_BASELINE_GAP": "No written environmental documents AND no environmental data tracking.",
+    "POLICY_LIGHT":               "Policies are missing or informal.",
+    "DUAL_ROLE_PRESSURE":         "Supplier is also a buyer, both roles.",
+    "SUPPLIER_CONFIDENCE_LOW":    "Respondent is not confident about responding to buyer's sustainability or human rights criteria for compliance",
+    "EU_EXPOSURE_NON_EU":         "Non-EU supplier exposed to EU buyer/investor requests.",
+    "DOCUMENTATION_LIGHT":        "Sustainability/social data tracking is missing or ad hoc.",
+}
+
 TAG_WEIGHTS = {
     "CSRD_CASCADE_SIGNAL":        1,
     "EU_EXPOSURE_NON_EU":         1,
@@ -420,6 +433,7 @@ TAG_WEIGHTS = {
     "DOCUMENTATION_LIGHT":        1,
     "SUPPLIER_CONFIDENCE_LOW":    1,
     "OWNER_GAP":                  2,
+    "DUAL_ROLE_PRESSURE":         1,
 }
 
 TAG_LABELS = {
@@ -432,6 +446,7 @@ TAG_LABELS = {
     "DOCUMENTATION_LIGHT":        "Documentation light",
     "SUPPLIER_CONFIDENCE_LOW":    "Low confidence",
     "OWNER_GAP":                  "Owner gap",
+    "DUAL_ROLE_PRESSURE":         "Dual role pressure",
 }
 
 MAX_SCORE = 12
@@ -479,6 +494,8 @@ def derive_tags(a: dict) -> list:
         tags.append("EU_EXPOSURE_NON_EU")
     if a.get("policy_status") in ("In development", "No"):
         tags.append("POLICY_LIGHT")
+    if a.get("value_chain_role") == "Both supplier and direct-to-market":
+        tags.append("DUAL_ROLE_PRESSURE")
     return list(dict.fromkeys(tags))
 
 
@@ -600,17 +617,7 @@ def build_pdf(results: dict, answers: dict) -> bytes:
     vc_role     = answers.get("value_chain_role", "—")
     report_date = datetime.today().strftime("%Y-%m-%d")
 
-    _TAG_LABELS = {
-        "CSRD_CASCADE_SIGNAL":        "CSRD cascade signal",
-        "EU_EXPOSURE_NON_EU":         "EU exposure",
-        "POLICY_LIGHT":               "Policy gaps",
-        "HRDD_RELEVANCE_HIGH":        "HRDD relevance high",
-        "BUYER_OPACITY_RISK":         "Buyer opacity risk",
-        "ENVIRONMENTAL_BASELINE_GAP": "Environmental baseline gap",
-        "DOCUMENTATION_LIGHT":        "Documentation light",
-        "SUPPLIER_CONFIDENCE_LOW":    "Low confidence",
-        "OWNER_GAP":                  "Owner gap",
-    }
+    _TAG_LABELS = TAG_LABELS
 
     _QUESTION_TEXTS = [
         ("operates_in_eu",          "Where is your company primarily operating?"),
@@ -814,6 +821,37 @@ def build_pdf(results: dict, answers: dict) -> bytes:
             story.append(Paragraph(f"[ ]  {step}", step_s))
             story.append(Spacer(1, 3))
         story.append(Spacer(1, 6))
+
+    # ── Tag definitions ───────────────────────────────────────────────────────
+    if tags:
+        story.append(Paragraph("TAG DEFINITIONS", label_s))
+        story.append(Spacer(1, 3))
+        tag_def_s = ps("tagdef", fontName="Helvetica", fontSize=8, textColor=MID, leading=12)
+        tag_key_s = ps("tagkey", fontName="Helvetica-Bold", fontSize=8, textColor=BLUE_TEXT, leading=12)
+        tag_rows = []
+        for t in tags:
+            label = TAG_LABELS.get(t, t.replace("_", " ").title())
+            defn  = TAG_DEFS.get(t, "")
+            tag_rows.append([
+                Paragraph(label, tag_key_s),
+                Paragraph(defn,  tag_def_s),
+            ])
+        col_lbl = W * 0.28
+        col_def = W - col_lbl
+        tag_tbl = Table(tag_rows, colWidths=[col_lbl, col_def])
+        tag_style = [
+            ("BOX",           (0, 0), (-1, -1), 0.5, BLUE_BORDER),
+            ("INNERGRID",     (0, 0), (-1, -1), 0.3, LIGHT_GREY),
+            ("BACKGROUND",    (0, 0), (-1, -1), BLUE_BG),
+            ("LEFTPADDING",   (0, 0), (-1, -1), 6),
+            ("RIGHTPADDING",  (0, 0), (-1, -1), 6),
+            ("TOPPADDING",    (0, 0), (-1, -1), 4),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+            ("VALIGN",        (0, 0), (-1, -1), "TOP"),
+        ]
+        tag_tbl.setStyle(TableStyle(tag_style))
+        story.append(tag_tbl)
+        story.append(Spacer(1, 10))
 
     # ── Page 2: Intake answers ────────────────────────────────────────────────
     story.append(PageBreak())
@@ -1416,6 +1454,27 @@ else:
             for t in tags
         )
         st.markdown(f'<div style="display:flex;flex-wrap:wrap;">{pills}</div>', unsafe_allow_html=True)
+
+        st.markdown('<div style="height:12px;"></div>', unsafe_allow_html=True)
+        st.markdown(
+            '<div style="font-size:11px;font-weight:600;color:#71717a;margin-bottom:8px;'
+            'letter-spacing:0.05em;text-transform:uppercase;">Tag definitions</div>',
+            unsafe_allow_html=True,
+        )
+        tag_def_rows = "".join(
+            f'<tr>'
+            f'<td style="padding:6px 10px 6px 0;vertical-align:top;white-space:nowrap;">'
+            f'<span style="font-size:10px;font-weight:600;color:#3b82f6;">{TAG_LABELS.get(t,t)}</span></td>'
+            f'<td style="padding:6px 0;font-size:11px;color:#a1a1aa;line-height:1.55;">{TAG_DEFS.get(t,"")}</td>'
+            f'</tr>'
+            for t in tags
+        )
+        st.markdown(
+            f'<table style="width:100%;border-collapse:collapse;background:#111113;'
+            f'border:1px solid #27272a;border-radius:6px;overflow:hidden;">'
+            f'{tag_def_rows}</table>',
+            unsafe_allow_html=True,
+        )
 
     st.markdown(
         f'<div style="background:#18181b;border-left:2px solid {bc};'
