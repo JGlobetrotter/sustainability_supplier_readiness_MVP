@@ -1489,15 +1489,16 @@ else:
             f'color:#8094B4;margin-bottom:8px;">Risk band</div>'
             f'<div style="font-family:\'Space Grotesk\',sans-serif;font-size:28px;'
             f'color:{bc};line-height:1;margin-bottom:4px;">{band}</div>'
-            f'<div style="font-size:11px;color:#8094B4;margin-bottom:10px;">{band_label}</div>'
+            f'<div style="font-size:11px;color:#B0C4DE;margin-bottom:10px;">{band_label}</div>'
             f'<div style="height:6px;border-radius:9999px;position:relative;margin-bottom:6px;'
             f'background:linear-gradient(to right,#10b981 0%,#10b981 30%,#f59e0b 30%,#f59e0b 65%,#ef4444 65%);">'
             f'<div style="position:absolute;top:50%;left:{needle_pct}%;transform:translate(-50%,-50%);'
             f'width:14px;height:14px;border-radius:50%;background:#fafafa;border:2px solid #0F1829;"></div></div>'
             f'<div style="display:flex;justify-content:space-between;font-size:9px;font-weight:600;letter-spacing:0.08em;">'
-            f'<span style="color:#10b981;">Green<br><span style="font-weight:400;opacity:0.7;">0–2</span></span>'
-            f'<span style="color:#f59e0b;text-align:center;">Amber<br><span style="font-weight:400;opacity:0.7;">3–6</span></span>'
-            f'<span style="color:#ef4444;text-align:right;">Red<br><span style="font-weight:400;opacity:0.7;">7–12</span></span></div></div>',
+            f'<div style="color:#10b981;text-align:left;">Green<div style="font-weight:400;color:#8094B4;">0–2</div></div>'
+            f'<div style="color:#f59e0b;text-align:center;">Amber<div style="font-weight:400;color:#8094B4;">3–6</div></div>'
+            f'<div style="color:#ef4444;text-align:right;">Red<div style="font-weight:400;color:#8094B4;">7–12</div></div>'
+            f'</div></div>',
             unsafe_allow_html=True,
         )
 
@@ -1510,7 +1511,7 @@ else:
                 f'<span style="font-size:10px;font-weight:600;color:#C9A84C;">{TAG_LABELS.get(t, t)}</span></td>'
                 f'<td style="padding:5px 8px 5px 0;text-align:right;white-space:nowrap;vertical-align:top;">'
                 f'<span style="font-size:11px;color:#fafafa;font-weight:600;">+{TAG_WEIGHTS.get(t, 0)}</span></td>'
-                f'<td style="padding:5px 0;font-size:11px;color:#8094B4;line-height:1.5;vertical-align:top;">'
+                f'<td style="padding:5px 0;font-size:11px;color:#B0C4DE;line-height:1.5;vertical-align:top;">'
                 f'{TAG_DEFS.get(t, "")}</td>'
                 f'</tr>'
                 for t in tags if TAG_WEIGHTS.get(t, 0) > 0
@@ -1523,7 +1524,7 @@ else:
             )
 
         st.markdown(
-            '<div style="font-size:11px;font-weight:600;color:#8094B4;margin-bottom:8px;'
+            '<div style="font-size:11px;font-weight:600;color:#B0C4DE;margin-bottom:8px;'
             'letter-spacing:0.05em;text-transform:uppercase;">Flags triggered</div>',
             unsafe_allow_html=True,
         )
@@ -1538,7 +1539,7 @@ else:
 
         st.markdown('<div style="height:12px;"></div>', unsafe_allow_html=True)
         st.markdown(
-            '<div style="font-size:11px;font-weight:600;color:#8094B4;margin-bottom:8px;'
+            '<div style="font-size:11px;font-weight:600;color:#B0C4DE;margin-bottom:8px;'
             'letter-spacing:0.05em;text-transform:uppercase;">Tag definitions</div>',
             unsafe_allow_html=True,
         )
@@ -1647,11 +1648,11 @@ else:
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:8px;flex-wrap:wrap;">
         <a href="https://navisignal.app" target="_blank"
            style="color:#C9A84C;text-decoration:none;font-weight:600;font-size:12px;">navisignal.app</a>
-        <span style="color:#1E2D48;font-size:12px;">&middot;</span>
+        <span style="color:#8094B4;font-size:12px;">&middot;</span>
         <a href="mailto:hello@navisignal.app"
            style="color:#C9A84C;text-decoration:none;font-weight:600;font-size:12px;">hello@navisignal.app</a>
       </div>
-      <div style="margin-top:12px;font-size:10px;color:#8094B4;opacity:0.5;letter-spacing:0.1em;">
+      <div style="margin-top:12px;font-size:10px;color:#8094B4;letter-spacing:0.12em;text-transform:uppercase;">
         Evidence. Structure. Action.
       </div>
     </div>
