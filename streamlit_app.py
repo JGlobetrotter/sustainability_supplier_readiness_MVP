@@ -22,7 +22,7 @@ st.set_page_config(
 # ── CSS ───────────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 /* ── Global fonts & background ────────────────────────────────────────── */
 *, html, body {
@@ -32,7 +32,7 @@ st.markdown("""
 [data-testid="stAppViewContainer"],
 [data-testid="stMain"],
 .main, section.main {
-  background-color: #0A1636 !important;
+  background-color: #0F1829 !important;
 }
 
 /* ── Hide Streamlit chrome ──────────────────────────────────────────────── */
@@ -65,14 +65,14 @@ label[data-testid="stWidgetLabel"] {
 
 /* ── BaseWeb Select — dark ──────────────────────────────────────────────── */
 [data-baseweb="select"] > div:first-child {
-  background-color: #1C2B50 !important;
-  border: 1px solid #1C3060 !important;
+  background-color: #182238 !important;
+  border: 1px solid #1E2D48 !important;
   border-radius: 6px !important;
   box-shadow: none !important;
   transition: border-color 150ms ease;
 }
 [data-baseweb="select"] > div:first-child:hover {
-  border-color: #2C4080 !important;
+  border-color: #2A3D60 !important;
 }
 [data-baseweb="select"] span,
 [data-baseweb="select"] div[role="button"] span,
@@ -84,31 +84,31 @@ label[data-testid="stWidgetLabel"] {
 [data-baseweb="select"] svg { fill: #8094B4 !important; }
 [data-baseweb="popover"],
 [data-baseweb="popover"] > div {
-  background-color: #1C2B50 !important;
-  border: 1px solid #1C3060 !important;
+  background-color: #182238 !important;
+  border: 1px solid #1E2D48 !important;
   border-radius: 6px !important;
   box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
 }
-[data-baseweb="menu"] { background-color: #1C2B50 !important; }
+[data-baseweb="menu"] { background-color: #182238 !important; }
 [data-baseweb="menu"] li,
 [data-baseweb="menu"] [role="option"] {
-  background-color: #1C2B50 !important;
+  background-color: #182238 !important;
   color: #fafafa !important;
   font-family: 'Inter', sans-serif !important;
   font-size: 13px !important;
 }
 [data-baseweb="menu"] li:hover,
-[data-baseweb="menu"] [role="option"]:hover { background-color: #1C3060 !important; }
+[data-baseweb="menu"] [role="option"]:hover { background-color: #1E2D48 !important; }
 [data-baseweb="menu"] [aria-selected="true"] {
-  background-color: rgba(200,149,58,0.12) !important;
-  color: #C8953A !important;
+  background-color: rgba(201,168,76,0.12) !important;
+  color: #C9A84C !important;
 }
 
 /* ── Text / password input ──────────────────────────────────────────────── */
 [data-testid="stTextInput"] input,
 input[type="password"] {
-  background-color: #1C2B50 !important;
-  border: 1px solid #1C3060 !important;
+  background-color: #182238 !important;
+  border: 1px solid #1E2D48 !important;
   border-radius: 6px !important;
   color: #fafafa !important;
   font-family: 'Inter', sans-serif !important;
@@ -118,16 +118,16 @@ input[type="password"] {
 }
 [data-testid="stTextInput"] input::placeholder { color: #8094B4 !important; }
 [data-testid="stTextInput"] input:focus {
-  border-color: #C8953A !important;
-  box-shadow: 0 0 0 3px rgba(200,149,58,0.25) !important;
+  border-color: #C9A84C !important;
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.25) !important;
   outline: none;
 }
 
 /* ── Buttons ────────────────────────────────────────────────────────────── */
 .stButton > button {
-  background: #C8953A !important;
+  background: #C9A84C !important;
   color: #fff !important;
-  border: 1px solid #C8953A !important;
+  border: 1px solid #C9A84C !important;
   border-radius: 6px !important;
   font-family: 'Inter', sans-serif !important;
   font-size: 13px !important;
@@ -138,28 +138,28 @@ input[type="password"] {
   transition: background 150ms ease, border-color 150ms ease !important;
 }
 .stButton > button:hover:not(:disabled) {
-  background: #B07828 !important;
-  border-color: #B07828 !important;
+  background: #A8893C !important;
+  border-color: #A8893C !important;
 }
 .stButton > button:disabled {
   background: transparent !important;
   color: #8094B4 !important;
-  border-color: #1C3060 !important;
+  border-color: #1E2D48 !important;
   cursor: default !important;
 }
 
 /* ── Download button ────────────────────────────────────────────────────── */
 [data-testid="stDownloadButton"] > button {
-  background: #C8953A !important;
+  background: #C9A84C !important;
   color: #fff !important;
-  border: 1px solid #C8953A !important;
+  border: 1px solid #C9A84C !important;
   border-radius: 6px !important;
   font-weight: 700 !important;
   font-size: 13px !important;
 }
 [data-testid="stDownloadButton"] > button:hover {
-  background: #B07828 !important;
-  border-color: #B07828 !important;
+  background: #A8893C !important;
+  border-color: #A8893C !important;
 }
 
 /* ── Checkbox ───────────────────────────────────────────────────────────── */
@@ -172,13 +172,13 @@ input[type="password"] {
 
 /* ── Expander ───────────────────────────────────────────────────────────── */
 [data-testid="stExpander"] {
-  border: 1px solid #1C3060 !important;
+  border: 1px solid #1E2D48 !important;
   border-radius: 6px !important;
   overflow: visible;
-  background: #1C2B50 !important;
+  background: #182238 !important;
 }
 [data-testid="stExpander"] details > summary {
-  background-color: #1C2B50 !important;
+  background-color: #182238 !important;
   color: #B0C4DE !important;
   font-size: 12px !important;
   font-weight: 600 !important;
@@ -187,8 +187,8 @@ input[type="password"] {
 }
 [data-testid="stExpander"] details[open] > summary { border-radius: 6px 6px 0 0; }
 [data-testid="stExpander"] > div > div {
-  background-color: #0A1636 !important;
-  border-top: 1px solid #1C3060 !important;
+  background-color: #0F1829 !important;
+  border-top: 1px solid #1E2D48 !important;
   padding: 12px 14px;
 }
 [data-testid="stExpander"] p, [data-testid="stExpander"] li {
@@ -199,8 +199,8 @@ input[type="password"] {
 
 /* ── Sidebar ────────────────────────────────────────────────────────────── */
 [data-testid="stSidebar"] {
-  background-color: #070F24 !important;
-  border-right: 1px solid #1C3060 !important;
+  background-color: #09111F !important;
+  border-right: 1px solid #1E2D48 !important;
 }
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] li,
@@ -212,19 +212,19 @@ input[type="password"] {
 [data-testid="stSidebar"] strong,
 [data-testid="stSidebar"] b { color: #fafafa !important; }
 [data-testid="stSidebar"] a {
-  color: #C8953A !important;
+  color: #C9A84C !important;
   text-decoration: none !important;
   font-weight: 600 !important;
 }
-[data-testid="stSidebar"] hr { border-color: #1C3060 !important; }
+[data-testid="stSidebar"] hr { border-color: #1E2D48 !important; }
 
 /* ── HR ─────────────────────────────────────────────────────────────────── */
-hr { border: none !important; border-top: 1px solid #1C3060 !important; margin: 0 !important; }
+hr { border: none !important; border-top: 1px solid #1E2D48 !important; margin: 0 !important; }
 
 /* ── Scrollbar ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: #0A1636; }
-::-webkit-scrollbar-thumb { background: #1C3060; border-radius: 3px; }
+::-webkit-scrollbar-track { background: #0F1829; }
+::-webkit-scrollbar-thumb { background: #1E2D48; border-radius: 3px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -594,19 +594,19 @@ def build_pdf(results: dict, answers: dict) -> bytes:
     )
 
     # ── Colours ───────────────────────────────────────────────────────────────
-    GOLD         = colors.HexColor("#C8953A")
-    DARK         = colors.HexColor("#0A1636")
-    MID          = colors.HexColor("#1C2B50")
+    GOLD         = colors.HexColor("#C9A84C")
+    DARK         = colors.HexColor("#0F1829")
+    MID          = colors.HexColor("#182238")
     MUTED        = colors.HexColor("#8094B4")
     LIGHT_GREY   = colors.HexColor("#C8D5E8")
     NEAR_WHITE   = colors.HexColor("#F5F8FC")
     STRIPE       = colors.HexColor("#F5F8FC")
     HEADER_BG    = colors.HexColor("#EEF2F6")
     AMBER_BG     = colors.HexColor("#FBF5E8")
-    AMBER_BORDER = colors.HexColor("#C8953A")
+    AMBER_BORDER = colors.HexColor("#C9A84C")
     BLUE_BG      = colors.HexColor("#EEF2F6")
-    BLUE_BORDER  = colors.HexColor("#C8B080")
-    BLUE_TEXT    = colors.HexColor("#C8953A")
+    BLUE_BORDER  = colors.HexColor("#C9A84C")
+    BLUE_TEXT    = colors.HexColor("#C9A84C")
     WARM_TEXT    = colors.HexColor("#6B3E15")
     C_GREEN      = colors.HexColor("#10b981")
     C_AMBER      = colors.HexColor("#f59e0b")
@@ -957,12 +957,12 @@ def build_pdf(results: dict, answers: dict) -> bytes:
 #     doc = SimpleDocTemplate(buf, pagesize=A4,
 #                             leftMargin=2*cm, rightMargin=2*cm,
 #                             topMargin=2*cm, bottomMargin=2*cm)
-#     ns_surface   = colors.HexColor("#0A1636")
+#     ns_surface   = colors.HexColor("#0F1829")
 #     ns_fg        = colors.HexColor("#fafafa")
 #     ns_fg_muted  = colors.HexColor("#B0C4DE")
 #     ns_fg_subtle = colors.HexColor("#8094B4")
-#     ns_primary   = colors.HexColor("#C8953A")
-#     ns_border    = colors.HexColor("#1C3060")
+#     ns_primary   = colors.HexColor("#C9A84C")
+#     ns_border    = colors.HexColor("#1E2D48")
 #     band_clr = {"GREEN": colors.HexColor("#10b981"),
 #                 "AMBER": colors.HexColor("#f59e0b"),
 #                 "RED":   colors.HexColor("#ef4444")}
@@ -1134,16 +1134,21 @@ if not st.session_state.authed:
     _, pw_col, _ = st.columns([1, 2.2, 1])
     with pw_col:
         st.markdown("""
-        <div style="background:#0A1636;border:1px solid #1C3060;border-radius:10px;
+        <div style="background:#0F1829;border:1px solid #1E2D48;border-radius:10px;
                     padding:40px 36px 28px;text-align:center;margin-bottom:16px;">
           <div style="margin-bottom:20px;">
-            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="22" cy="22" r="20" stroke="#C8953A" stroke-width="2" opacity="0.3"/>
-              <circle cx="22" cy="22" r="3" fill="#C8953A"/>
-              <line x1="22" y1="2" x2="22" y2="10" stroke="#C8953A" stroke-width="2" stroke-linecap="round"/>
-              <line x1="22" y1="34" x2="22" y2="42" stroke="#C8953A" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
-              <line x1="2" y1="22" x2="10" y2="22" stroke="#C8953A" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
-              <line x1="34" y1="22" x2="42" y2="22" stroke="#C8953A" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+            <svg width="56" height="36" viewBox="0 0 56 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="4" cy="9"  r="2.2" fill="#C9A84C" opacity="0.45"/>
+              <circle cx="4" cy="18" r="2.2" fill="#C9A84C" opacity="0.75"/>
+              <circle cx="4" cy="27" r="2.2" fill="#C9A84C" opacity="0.45"/>
+              <line x1="6.2" y1="9"  x2="34" y2="18" stroke="#C9A84C" stroke-width="1"   stroke-linecap="round" opacity="0.45"/>
+              <line x1="6.2" y1="18" x2="34" y2="18" stroke="#C9A84C" stroke-width="1.3" stroke-linecap="round" opacity="0.85"/>
+              <line x1="6.2" y1="27" x2="34" y2="18" stroke="#C9A84C" stroke-width="1"   stroke-linecap="round" opacity="0.45"/>
+              <path d="M34 12 L35.4 17.2 L34 18 L35.4 18.8 L34 24 L32.6 18.8 L34 18 L32.6 17.2 Z" fill="#C9A84C"/>
+              <path d="M28 18 L32.6 17.2 L34 18 L32.6 18.8 L28 18 Z" fill="#C9A84C"/>
+              <path d="M40 18 L35.4 17.2 L34 18 L35.4 18.8 L40 18 Z" fill="#C9A84C"/>
+              <line x1="40" y1="18" x2="52" y2="18" stroke="#C9A84C" stroke-width="1.4" stroke-linecap="round"/>
+              <polyline points="47,13.5 52,18 47,22.5" stroke="#C9A84C" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             </svg>
           </div>
           <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;
@@ -1166,7 +1171,7 @@ if not st.session_state.authed:
         st.markdown(
             f'<div style="text-align:center;margin-top:16px;font-size:12px;color:#8094B4;">'
             f'<a href="mailto:{BETA_EMAIL}?subject=Beta access request" '
-            f'style="color:#C8953A;font-weight:600;text-decoration:none;">Request beta access</a></div>',
+            f'style="color:#C9A84C;font-weight:600;text-decoration:none;">Request beta access</a></div>',
             unsafe_allow_html=True,
         )
     st.stop()
@@ -1212,7 +1217,7 @@ risks, and distinguishes between suppliers who need support, monitoring, or esca
             if i < cur_step:
                 dot, clr, fw = "●", "#10b981", "400"
             elif i == cur_step:
-                dot, clr, fw = "●", "#C8953A", "600"
+                dot, clr, fw = "●", "#C9A84C", "600"
             else:
                 dot, clr, fw = "○", "#8094B4", "400"
             st.markdown(
@@ -1239,19 +1244,33 @@ risks, and distinguishes between suppliers who need support, monitoring, or esca
 # HEADER
 # ═══════════════════════════════════════════════════════════════════════════════
 st.markdown("""
-<div style="border-bottom:1px solid #1C3060;padding:14px 0 14px;
+<div style="border-bottom:1px solid #1E2D48;padding:14px 0 14px;
             display:flex;align-items:center;justify-content:space-between;
             margin-bottom:4px;">
-  <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;color:#fafafa;">
-    Navisignal
+  <div style="display:flex;align-items:center;gap:10px;">
+    <svg width="42" height="26" viewBox="0 0 56 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="4" cy="9"  r="2.2" fill="#C9A84C" opacity="0.45"/>
+      <circle cx="4" cy="18" r="2.2" fill="#C9A84C" opacity="0.75"/>
+      <circle cx="4" cy="27" r="2.2" fill="#C9A84C" opacity="0.45"/>
+      <line x1="6.2" y1="9"  x2="34" y2="18" stroke="#C9A84C" stroke-width="1"   stroke-linecap="round" opacity="0.45"/>
+      <line x1="6.2" y1="18" x2="34" y2="18" stroke="#C9A84C" stroke-width="1.3" stroke-linecap="round" opacity="0.85"/>
+      <line x1="6.2" y1="27" x2="34" y2="18" stroke="#C9A84C" stroke-width="1"   stroke-linecap="round" opacity="0.45"/>
+      <path d="M34 12 L35.4 17.2 L34 18 L35.4 18.8 L34 24 L32.6 18.8 L34 18 L32.6 17.2 Z" fill="#C9A84C"/>
+      <path d="M28 18 L32.6 17.2 L34 18 L32.6 18.8 L28 18 Z" fill="#C9A84C"/>
+      <path d="M40 18 L35.4 17.2 L34 18 L35.4 18.8 L40 18 Z" fill="#C9A84C"/>
+      <line x1="40" y1="18" x2="52" y2="18" stroke="#C9A84C" stroke-width="1.4" stroke-linecap="round"/>
+      <polyline points="47,13.5 52,18 47,22.5" stroke="#C9A84C" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <span style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;
+                 letter-spacing:0.12em;text-transform:uppercase;color:#fafafa;">Navisignal</span>
     <span style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;
-                 letter-spacing:0.1em;text-transform:uppercase;color:#C8953A;
-                 border:1px solid #C8953A;border-radius:9999px;
-                 padding:2px 8px;margin-left:8px;">Beta</span>
+                 letter-spacing:0.1em;text-transform:uppercase;color:#C9A84C;
+                 border:1px solid rgba(201,168,76,0.4);border-radius:9999px;
+                 padding:2px 8px;">Beta</span>
   </div>
   <div style="text-align:right;">
-    <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;color:#fafafa;">Supplier Readiness Diagnostic</div>
-    <div style="font-size:11px;color:#8094B4;margin-top:1px;">CSRD-aligned &middot; SME &amp; supply chain</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;color:#fafafa;letter-spacing:0.02em;">Supplier Readiness Diagnostic</div>
+    <div style="font-size:10px;color:#8094B4;margin-top:2px;letter-spacing:0.04em;">CSRD-aligned &middot; SME &amp; supply chain</div>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -1266,20 +1285,20 @@ if not is_results:
     pct        = int((answered_q / total_q) * 100)
 
     st.markdown(
-        f'<div style="padding:10px 0 14px;border-bottom:1px solid #0F1B3A;margin-bottom:20px;">'
+        f'<div style="padding:10px 0 14px;border-bottom:1px solid #1E2D48;margin-bottom:20px;">'
         f'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
         f'<span style="font-size:11px;color:#8094B4;">{SECTIONS[cur_step]["label"]} — step {cur_step+1} of {len(SECTIONS)}</span>'
-        f'<span style="font-size:11px;color:#C8953A;font-weight:600;">{pct}% complete</span>'
+        f'<span style="font-size:11px;color:#C9A84C;font-weight:600;">{pct}% complete</span>'
         f'</div>'
-        f'<div style="height:3px;background:#1C3060;border-radius:9999px;overflow:hidden;">'
-        f'<div style="height:3px;background:#C8953A;border-radius:9999px;'
+        f'<div style="height:3px;background:#1E2D48;border-radius:9999px;overflow:hidden;">'
+        f'<div style="height:3px;background:#C9A84C;border-radius:9999px;'
         f'width:{pct}%;transition:width 0.4s ease;"></div></div></div>',
         unsafe_allow_html=True,
     )
 
     dots = '<div style="display:flex;gap:6px;margin-bottom:28px;">'
     for i in range(len(SECTIONS)):
-        c = "#10b981" if i < cur_step else ("#C8953A" if i == cur_step else "#1C3060")
+        c = "#10b981" if i < cur_step else ("#C9A84C" if i == cur_step else "#1E2D48")
         dots += f'<div style="flex:1;height:3px;border-radius:9999px;background:{c};"></div>'
     dots += '</div>'
     st.markdown(dots, unsafe_allow_html=True)
@@ -1294,7 +1313,7 @@ if not is_results:
 
     st.markdown(
         f'<div style="font-size:11px;font-weight:600;letter-spacing:0.18em;'
-        f'text-transform:uppercase;color:#C8953A;margin-bottom:6px;">'
+        f'text-transform:uppercase;color:#C9A84C;margin-bottom:6px;">'
         f'Section {cur_step+1} of {len(SECTIONS)}</div>',
         unsafe_allow_html=True,
     )
@@ -1335,7 +1354,7 @@ if not is_results:
         st.markdown(
             f'<div style="font-size:13px;font-weight:500;color:{lbl_color};'
             f'margin-bottom:4px;margin-top:4px;">'
-            f'{q["text"]} <span style="color:#C8953A;">⁎</span></div>',
+            f'{q["text"]} <span style="color:#C9A84C;">⁎</span></div>',
             unsafe_allow_html=True,
         )
 
@@ -1366,11 +1385,11 @@ if not is_results:
                     for a in assumptions
                 )
                 st.markdown(
-                    f'<div style="background:rgba(200,149,58,0.06);'
-                    f'border-left:2px solid #C8953A;border-radius:0 6px 6px 0;'
+                    f'<div style="background:rgba(201,168,76,0.06);'
+                    f'border-left:2px solid #C9A84C;border-radius:0 6px 6px 0;'
                     f'padding:10px 14px;margin-top:4px;margin-bottom:4px;">'
                     f'<div style="font-size:10px;font-weight:600;letter-spacing:0.1em;'
-                    f'text-transform:uppercase;color:#C8953A;margin-bottom:6px;">'
+                    f'text-transform:uppercase;color:#C9A84C;margin-bottom:6px;">'
                     f'Sector baseline</div>'
                     f'<ul style="padding-left:14px;margin:0;">{bullets}</ul></div>',
                     unsafe_allow_html=True,
@@ -1379,7 +1398,7 @@ if not is_results:
         st.markdown('<div style="height:6px;"></div>', unsafe_allow_html=True)
 
     st.markdown(
-        '<hr style="border:none;border-top:1px solid #1C3060;margin:24px 0 16px;">',
+        '<hr style="border:none;border-top:1px solid #1E2D48;margin:24px 0 16px;">',
         unsafe_allow_html=True,
     )
     answered_sec = sum(1 for q in section_qs if st.session_state.answers.get(q["key"]))
@@ -1438,7 +1457,7 @@ else:
 
     st.markdown(
         '<div style="font-size:11px;font-weight:600;letter-spacing:0.18em;'
-        'text-transform:uppercase;color:#C8953A;margin-bottom:6px;">Assessment complete</div>',
+        'text-transform:uppercase;color:#C9A84C;margin-bottom:6px;">Assessment complete</div>',
         unsafe_allow_html=True,
     )
     st.markdown(
@@ -1455,7 +1474,7 @@ else:
     col_s, col_b = st.columns([1, 2])
     with col_s:
         st.markdown(
-            f'<div style="background:#1C2B50;border:1px solid #1C3060;border-radius:6px;padding:16px 18px;">'
+            f'<div style="background:#182238;border:1px solid #1E2D48;border-radius:6px;padding:16px 18px;">'
             f'<div style="font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;'
             f'color:#8094B4;margin-bottom:8px;">Score</div>'
             f'<div style="font-family:\'Space Grotesk\',sans-serif;font-size:42px;'
@@ -1465,7 +1484,7 @@ else:
         )
     with col_b:
         st.markdown(
-            f'<div style="background:#1C2B50;border:1px solid #1C3060;border-radius:6px;padding:16px 18px;">'
+            f'<div style="background:#182238;border:1px solid #1E2D48;border-radius:6px;padding:16px 18px;">'
             f'<div style="font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;'
             f'color:#8094B4;margin-bottom:8px;">Risk band</div>'
             f'<div style="font-family:\'Space Grotesk\',sans-serif;font-size:28px;'
@@ -1474,7 +1493,7 @@ else:
             f'<div style="height:6px;border-radius:9999px;position:relative;margin-bottom:6px;'
             f'background:linear-gradient(to right,#10b981 0%,#10b981 30%,#f59e0b 30%,#f59e0b 65%,#ef4444 65%);">'
             f'<div style="position:absolute;top:50%;left:{needle_pct}%;transform:translate(-50%,-50%);'
-            f'width:14px;height:14px;border-radius:50%;background:#fafafa;border:2px solid #0A1636;"></div></div>'
+            f'width:14px;height:14px;border-radius:50%;background:#fafafa;border:2px solid #0F1829;"></div></div>'
             f'<div style="display:flex;justify-content:space-between;font-size:9px;font-weight:600;letter-spacing:0.08em;">'
             f'<span style="color:#10b981;">Green<br><span style="font-weight:400;opacity:0.7;">0–2</span></span>'
             f'<span style="color:#f59e0b;text-align:center;">Amber<br><span style="font-weight:400;opacity:0.7;">3–6</span></span>'
@@ -1488,7 +1507,7 @@ else:
             breakdown_rows = "".join(
                 f'<tr>'
                 f'<td style="padding:5px 12px 5px 0;white-space:nowrap;vertical-align:top;">'
-                f'<span style="font-size:10px;font-weight:600;color:#C8953A;">{TAG_LABELS.get(t, t)}</span></td>'
+                f'<span style="font-size:10px;font-weight:600;color:#C9A84C;">{TAG_LABELS.get(t, t)}</span></td>'
                 f'<td style="padding:5px 8px 5px 0;text-align:right;white-space:nowrap;vertical-align:top;">'
                 f'<span style="font-size:11px;color:#fafafa;font-weight:600;">+{TAG_WEIGHTS.get(t, 0)}</span></td>'
                 f'<td style="padding:5px 0;font-size:11px;color:#8094B4;line-height:1.5;vertical-align:top;">'
@@ -1498,7 +1517,7 @@ else:
             )
             st.markdown(
                 f'<table style="width:100%;border-collapse:collapse;">{breakdown_rows}</table>'
-                f'<div style="font-size:11px;color:#8094B4;margin-top:8px;border-top:1px solid #1C3060;padding-top:8px;">'
+                f'<div style="font-size:11px;color:#8094B4;margin-top:8px;border-top:1px solid #1E2D48;padding-top:8px;">'
                 f'Total: <strong style="color:#fafafa;">{score} / {MAX_SCORE}</strong></div>',
                 unsafe_allow_html=True,
             )
@@ -1511,7 +1530,7 @@ else:
         pills = "".join(
             f'<span style="display:inline-block;padding:3px 10px;border-radius:9999px;'
             f'font-size:10px;font-weight:600;letter-spacing:0.05em;'
-            f'background:rgba(200,149,58,0.12);color:#C8953A;margin:2px 4px 2px 0;">'
+            f'background:rgba(201,168,76,0.12);color:#C9A84C;margin:2px 4px 2px 0;">'
             f'{TAG_LABELS.get(t,t)}</span>'
             for t in tags
         )
@@ -1526,20 +1545,20 @@ else:
         tag_def_rows = "".join(
             f'<tr>'
             f'<td style="padding:6px 10px 6px 0;vertical-align:top;white-space:nowrap;">'
-            f'<span style="font-size:10px;font-weight:600;color:#C8953A;">{TAG_LABELS.get(t,t)}</span></td>'
+            f'<span style="font-size:10px;font-weight:600;color:#C9A84C;">{TAG_LABELS.get(t,t)}</span></td>'
             f'<td style="padding:6px 0;font-size:11px;color:#B0C4DE;line-height:1.55;">{TAG_DEFS.get(t,"")}</td>'
             f'</tr>'
             for t in tags
         )
         st.markdown(
-            f'<table style="width:100%;border-collapse:collapse;background:#0A1636;'
-            f'border:1px solid #1C3060;border-radius:6px;overflow:hidden;">'
+            f'<table style="width:100%;border-collapse:collapse;background:#0F1829;'
+            f'border:1px solid #1E2D48;border-radius:6px;overflow:hidden;">'
             f'{tag_def_rows}</table>',
             unsafe_allow_html=True,
         )
 
     st.markdown(
-        f'<div style="background:#1C2B50;border-left:2px solid {bc};'
+        f'<div style="background:#182238;border-left:2px solid {bc};'
         f'border-radius:0 6px 6px 0;padding:14px 16px;margin-top:16px;margin-bottom:24px;">'
         f'<div style="font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;'
         f'color:#8094B4;margin-bottom:6px;">Interpretation</div>'
@@ -1547,11 +1566,11 @@ else:
         unsafe_allow_html=True,
     )
 
-    st.markdown('<hr style="border:none;border-top:1px solid #1C3060;margin:28px 0;">', unsafe_allow_html=True)
+    st.markdown('<hr style="border:none;border-top:1px solid #1E2D48;margin:28px 0;">', unsafe_allow_html=True)
 
     st.markdown(
         '<div style="font-size:11px;font-weight:600;letter-spacing:0.18em;'
-        'text-transform:uppercase;color:#C8953A;margin-bottom:4px;">Action checklist</div>',
+        'text-transform:uppercase;color:#C9A84C;margin-bottom:4px;">Action checklist</div>',
         unsafe_allow_html=True,
     )
     st.markdown(
@@ -1565,7 +1584,7 @@ else:
         tag_label = TAG_LABELS.get(tag, "") if tag else ""
         if tag_label:
             st.markdown(
-                f'<div style="font-size:10px;font-weight:600;color:#C8953A;'
+                f'<div style="font-size:10px;font-weight:600;color:#C9A84C;'
                 f'letter-spacing:0.06em;text-transform:uppercase;margin-top:12px;margin-bottom:2px;">'
                 f'{tag_label}</div>',
                 unsafe_allow_html=True,
@@ -1573,14 +1592,14 @@ else:
         st.checkbox(step_text, key=f"chk_{i}", value=False)
 
     st.markdown(
-        '<div style="background:rgba(200,149,58,0.07);border:1px solid rgba(200,149,58,0.25);'
+        '<div style="background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.25);'
         'border-radius:6px;padding:14px 16px;margin-top:20px;">'
-        '<div style="font-size:11px;font-weight:600;color:#C8953A;margin-bottom:4px;'
+        '<div style="font-size:11px;font-weight:600;color:#C9A84C;margin-bottom:4px;'
         'letter-spacing:0.06em;text-transform:uppercase;">Need a tailored plan?</div>'
         '<p style="font-size:12px;color:#B0C4DE;line-height:1.6;margin:0;">'
         'This diagnostic generates a starting point. For a customised action list matched to your '
         'sector, buyer base, and internal capacity, contact us at '
-        '<a href="mailto:hello@navisignal.app" style="color:#C8953A;font-weight:600;">'
+        '<a href="mailto:hello@navisignal.app" style="color:#C9A84C;font-weight:600;">'
         'hello@navisignal.app</a>.</p></div>',
         unsafe_allow_html=True,
     )
@@ -1591,7 +1610,7 @@ else:
             for assumption in SECTOR_ASSUMPTIONS[sector_val]:
                 st.markdown(f"- {assumption}")
 
-    st.markdown('<hr style="border:none;border-top:1px solid #1C3060;margin:28px 0;">', unsafe_allow_html=True)
+    st.markdown('<hr style="border:none;border-top:1px solid #1E2D48;margin:28px 0;">', unsafe_allow_html=True)
 
     col_dl, col_rs = st.columns([2, 1])
     with col_dl:
@@ -1620,17 +1639,17 @@ else:
     )
 
     st.markdown("""
-    <div style="border-top:1px solid #1C3060;padding:28px 0 40px;text-align:center;line-height:1.7;">
+    <div style="border-top:1px solid #1E2D48;padding:28px 0 40px;text-align:center;line-height:1.7;">
       <div style="font-size:12px;color:#8094B4;margin-bottom:4px;">
         Supplier Readiness Diagnostic is a product of
         <strong style="color:#B0C4DE;">Navisignal</strong> — practical tools for complex decisions.
       </div>
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:8px;flex-wrap:wrap;">
         <a href="https://navisignal.app" target="_blank"
-           style="color:#C8953A;text-decoration:none;font-weight:600;font-size:12px;">navisignal.app</a>
-        <span style="color:#1C3060;font-size:12px;">&middot;</span>
+           style="color:#C9A84C;text-decoration:none;font-weight:600;font-size:12px;">navisignal.app</a>
+        <span style="color:#1E2D48;font-size:12px;">&middot;</span>
         <a href="mailto:hello@navisignal.app"
-           style="color:#C8953A;text-decoration:none;font-weight:600;font-size:12px;">hello@navisignal.app</a>
+           style="color:#C9A84C;text-decoration:none;font-weight:600;font-size:12px;">hello@navisignal.app</a>
       </div>
       <div style="margin-top:12px;font-size:10px;color:#8094B4;opacity:0.5;letter-spacing:0.1em;">
         Evidence. Structure. Action.
