@@ -598,16 +598,15 @@ def build_pdf(results: dict, answers: dict) -> bytes:
     DARK         = colors.HexColor("#0F1829")
     MID          = colors.HexColor("#182238")
     MUTED        = colors.HexColor("#8094B4")
+    WHITE        = colors.white
     LIGHT_GREY   = colors.HexColor("#C8D5E8")
-    NEAR_WHITE   = colors.HexColor("#F5F8FC")
-    STRIPE       = colors.HexColor("#F5F8FC")
-    HEADER_BG    = colors.HexColor("#EEF2F6")
-    AMBER_BG     = colors.HexColor("#FBF5E8")
-    AMBER_BORDER = colors.HexColor("#C9A84C")
-    BLUE_BG      = colors.HexColor("#EEF2F6")
-    BLUE_BORDER  = colors.HexColor("#C9A84C")
-    BLUE_TEXT    = colors.HexColor("#C9A84C")
-    WARM_TEXT    = colors.HexColor("#6B3E15")
+    NEAR_WHITE   = colors.HexColor("#F4F7FB")
+    HEADER_BG    = colors.HexColor("#0F1829")   # dark navy for table header rows
+    AMBER_BG     = colors.HexColor("#FDF8EE")   # light gold tint
+    AMBER_BORDER = GOLD
+    BLUE_BG      = colors.HexColor("#EDF1F8")   # light cool tint
+    BLUE_BORDER  = GOLD
+    BLUE_TEXT    = GOLD
     C_GREEN      = colors.HexColor("#10b981")
     C_AMBER      = colors.HexColor("#f59e0b")
     C_RED        = colors.HexColor("#ef4444")
@@ -621,27 +620,29 @@ def build_pdf(results: dict, answers: dict) -> bytes:
             setattr(s, k, v)
         return s
 
-    brand_s    = ps("brand",    fontName="Helvetica-Bold", fontSize=13, textColor=DARK)
-    hdr_right_s= ps("hdrr",    fontName="Helvetica",      fontSize=7,  textColor=MUTED, alignment=TA_RIGHT, leading=11)
-    title_s    = ps("title",   fontName="Helvetica-Bold", fontSize=20, textColor=DARK, leading=26, spaceAfter=10)
-    subtitle_s = ps("sub",     fontName="Helvetica",      fontSize=9,  textColor=MUTED)
-    label_s    = ps("lbl",     fontName="Helvetica-Bold", fontSize=7,  textColor=MUTED, leading=10)
-    big_num_s  = ps("bignum",  fontName="Helvetica-Bold", fontSize=30, textColor=DARK)
-    band_v_s   = ps("bandv",   fontName="Helvetica-Bold", fontSize=17, textColor=DARK, leading=20)
-    body_s     = ps("body",    fontName="Helvetica",      fontSize=9,  textColor=MID,  leading=14)
-    meta_lbl_s = ps("mlbl",   fontName="Helvetica-Bold", fontSize=7,  textColor=MUTED, leading=10)
-    meta_val_s = ps("mval",   fontName="Helvetica",      fontSize=9,  textColor=DARK,  leading=13)
-    interp_s   = ps("interp",  fontName="Helvetica",      fontSize=9,  textColor=WARM_TEXT, leading=14)
-    step_s     = ps("step",    fontName="Helvetica",      fontSize=9,  textColor=DARK, leading=14, leftIndent=6)
-    flag_s     = ps("flag",    fontName="Helvetica-Bold", fontSize=8,  textColor=BLUE_TEXT, leading=13)
-    assump_s   = ps("assump",  fontName="Helvetica",      fontSize=8,  textColor=MID,  leading=13)
-    h2_s       = ps("h2",      fontName="Helvetica-Bold", fontSize=11, textColor=DARK, spaceBefore=12, spaceAfter=4)
-    qa_hdr_s   = ps("qa_hdr", fontName="Helvetica-Bold", fontSize=8,  textColor=DARK, leading=12)
-    qa_q_s     = ps("qa_q",   fontName="Helvetica-Bold", fontSize=8,  textColor=DARK, leading=12)
-    qa_a_s     = ps("qa_a",   fontName="Helvetica",      fontSize=8,  textColor=MID,  leading=12)
-    bar_lbl_s  = ps("barlbl", fontName="Helvetica",      fontSize=7,  textColor=MUTED)
-    bar_lbl_c  = ps("barlblc",fontName="Helvetica",      fontSize=7,  textColor=MUTED, alignment=TA_CENTER)
-    bar_lbl_r  = ps("barlblr",fontName="Helvetica",      fontSize=7,  textColor=MUTED, alignment=TA_RIGHT)
+    brand_s        = ps("brand",    fontName="Helvetica-Bold", fontSize=13, textColor=GOLD)
+    hdr_right_s    = ps("hdrr",    fontName="Helvetica",      fontSize=7,  textColor=MUTED, alignment=TA_RIGHT, leading=11)
+    title_s        = ps("title",   fontName="Helvetica-Bold", fontSize=20, textColor=DARK, leading=26, spaceAfter=10)
+    subtitle_s     = ps("sub",     fontName="Helvetica",      fontSize=9,  textColor=MUTED)
+    label_s        = ps("lbl",     fontName="Helvetica-Bold", fontSize=7,  textColor=MUTED, leading=10)
+    big_num_s      = ps("bignum",  fontName="Helvetica-Bold", fontSize=30, textColor=WHITE)
+    big_num_lbl_s  = ps("bignumlbl", fontName="Helvetica-Bold", fontSize=7, textColor=GOLD, leading=10)
+    band_v_s       = ps("bandv",   fontName="Helvetica-Bold", fontSize=17, textColor=DARK, leading=20)
+    body_s         = ps("body",    fontName="Helvetica",      fontSize=9,  textColor=MID,  leading=14)
+    meta_lbl_s     = ps("mlbl",   fontName="Helvetica-Bold", fontSize=7,  textColor=WHITE, leading=10)
+    meta_val_s     = ps("mval",   fontName="Helvetica",      fontSize=9,  textColor=DARK,  leading=13)
+    interp_s       = ps("interp",  fontName="Helvetica",      fontSize=9,  textColor=DARK,  leading=14)
+    step_s         = ps("step",    fontName="Helvetica",      fontSize=9,  textColor=DARK, leading=14, leftIndent=6)
+    step_tag_s     = ps("steptag", fontName="Helvetica-Bold", fontSize=7,  textColor=GOLD, leading=10, spaceBefore=6)
+    flag_s         = ps("flag",    fontName="Helvetica-Bold", fontSize=8,  textColor=GOLD,  leading=13)
+    assump_s       = ps("assump",  fontName="Helvetica",      fontSize=8,  textColor=MID,  leading=13)
+    h2_s           = ps("h2",      fontName="Helvetica-Bold", fontSize=11, textColor=DARK, spaceBefore=12, spaceAfter=4)
+    qa_hdr_s       = ps("qa_hdr", fontName="Helvetica-Bold", fontSize=8,  textColor=WHITE, leading=12)
+    qa_q_s         = ps("qa_q",   fontName="Helvetica-Bold", fontSize=8,  textColor=DARK, leading=12)
+    qa_a_s         = ps("qa_a",   fontName="Helvetica",      fontSize=8,  textColor=MID,  leading=12)
+    bar_lbl_s      = ps("barlbl", fontName="Helvetica",      fontSize=7,  textColor=MUTED)
+    bar_lbl_c      = ps("barlblc",fontName="Helvetica",      fontSize=7,  textColor=MUTED, alignment=TA_CENTER)
+    bar_lbl_r      = ps("barlblr",fontName="Helvetica",      fontSize=7,  textColor=MUTED, alignment=TA_RIGHT)
 
     # ── Extract data ──────────────────────────────────────────────────────────
     score          = results.get("score", 0)
@@ -692,17 +693,20 @@ def build_pdf(results: dict, answers: dict) -> bytes:
 
     story = []
 
-    # ── Header ────────────────────────────────────────────────────────────────
+    # ── Header bar ────────────────────────────────────────────────────────────
     hdr_tbl = Table(
-        [[Paragraph("Navisignal", brand_s),
+        [[Paragraph("NAVISIGNAL", brand_s),
           Paragraph(f"SUPPLIER READINESS REPORT<br/>"
                     f"<font size='6'>Generated {report_date}</font>", hdr_right_s)]],
         colWidths=[W * 0.5, W * 0.5],
     )
     hdr_tbl.setStyle(TableStyle([
+        ("BACKGROUND",    (0, 0), (-1, -1), HEADER_BG),
         ("VALIGN",        (0, 0), (-1, -1), "MIDDLE"),
-        ("TOPPADDING",    (0, 0), (-1, -1), 4),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ("TOPPADDING",    (0, 0), (-1, -1), 10),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+        ("LEFTPADDING",   (0, 0), (-1, -1), 10),
+        ("RIGHTPADDING",  (0, 0), (-1, -1), 10),
     ]))
     story.append(hdr_tbl)
     story.append(HRFlowable(width=W, thickness=1.5, color=GOLD, spaceAfter=10))
@@ -717,25 +721,27 @@ def build_pdf(results: dict, answers: dict) -> bytes:
 
     # ── Score + Risk Band ─────────────────────────────────────────────────────
     score_cell = [
-        Paragraph("SCORE", label_s),
-        Paragraph(f"{score} <font size='16'>/ 12</font>", big_num_s),
+        Paragraph("SCORE", big_num_lbl_s),
+        Paragraph(f"{score} <font size='16' color='#8094B4'>/ 12</font>", big_num_s),
     ]
     band_cell = [
         Paragraph("RISK BAND", label_s),
         Paragraph(band_label, band_v_s),
-        Paragraph("Some sustainability-driven pressure likely", body_s),
+        Spacer(1, 2),
+        Paragraph(interpretation[:120] + "…" if len(interpretation) > 120 else interpretation, body_s),
     ]
     sb_tbl = Table([[score_cell, band_cell]], colWidths=[W * 0.28, W * 0.72])
     sb_tbl.setStyle(TableStyle([
         ("VALIGN",        (0, 0), (-1, -1), "TOP"),
-        ("LEFTPADDING",   (0, 0), (-1, -1), 8),
-        ("RIGHTPADDING",  (0, 0), (-1, -1), 8),
-        ("TOPPADDING",    (0, 0), (-1, -1), 8),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+        ("LEFTPADDING",   (0, 0), (-1, -1), 10),
+        ("RIGHTPADDING",  (0, 0), (-1, -1), 10),
+        ("TOPPADDING",    (0, 0), (-1, -1), 10),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
         ("BOX",           (0, 0), (0, 0), 0.5, LIGHT_GREY),
         ("BOX",           (1, 0), (1, 0), 0.5, LIGHT_GREY),
-        ("BACKGROUND",    (0, 0), (0, 0), NEAR_WHITE),
+        ("BACKGROUND",    (0, 0), (0, 0), HEADER_BG),
         ("BACKGROUND",    (1, 0), (1, 0), NEAR_WHITE),
+        ("LINEAFTER",     (0, 0), (0, 0), 2, GOLD),
     ]))
     story.append(sb_tbl)
     story.append(Spacer(1, 5))
@@ -789,12 +795,14 @@ def build_pdf(results: dict, answers: dict) -> bytes:
     meta_tbl.setStyle(TableStyle([
         ("BOX",           (0, 0), (-1, -1), 0.5, LIGHT_GREY),
         ("INNERGRID",     (0, 0), (-1, -1), 0.3, LIGHT_GREY),
-        ("BACKGROUND",    (0, 0), (-1, 0),  HEADER_BG),
+        ("BACKGROUND",    (0, 0), (-1, 0),  HEADER_BG),  # dark navy label rows
         ("BACKGROUND",    (0, 2), (-1, 2),  HEADER_BG),
-        ("LEFTPADDING",   (0, 0), (-1, -1), 6),
-        ("RIGHTPADDING",  (0, 0), (-1, -1), 6),
-        ("TOPPADDING",    (0, 0), (-1, -1), 4),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ("BACKGROUND",    (0, 1), (-1, 1),  colors.white),
+        ("BACKGROUND",    (0, 3), (-1, 3),  NEAR_WHITE),
+        ("LEFTPADDING",   (0, 0), (-1, -1), 8),
+        ("RIGHTPADDING",  (0, 0), (-1, -1), 8),
+        ("TOPPADDING",    (0, 0), (-1, -1), 5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
         ("VALIGN",        (0, 0), (-1, -1), "TOP"),
     ]))
     story.append(meta_tbl)
@@ -825,8 +833,8 @@ def build_pdf(results: dict, answers: dict) -> bytes:
         story.append(Spacer(1, 3))
         interp_box = Table([[Paragraph(interpretation, interp_s)]], colWidths=[W])
         interp_box.setStyle(TableStyle([
-            ("BOX",           (0, 0), (-1, -1), 0.5, AMBER_BORDER),
-            ("LINEBEFORE",    (0, 0), (0, -1),  3,   AMBER_BORDER),
+            ("BOX",           (0, 0), (-1, -1), 0.5, LIGHT_GREY),
+            ("LINEBEFORE",    (0, 0), (0, -1),  3,   bc),
             ("BACKGROUND",    (0, 0), (-1, -1), AMBER_BG),
             ("LEFTPADDING",   (0, 0), (-1, -1), 10),
             ("RIGHTPADDING",  (0, 0), (-1, -1), 8),
@@ -860,9 +868,13 @@ def build_pdf(results: dict, answers: dict) -> bytes:
     if next_steps:
         story.append(Paragraph("Recommended next steps", h2_s))
         for step in next_steps:
+            tag_key   = step.get("tag")  if isinstance(step, dict) else None
             step_text = step.get("text", step) if isinstance(step, dict) else step
-            story.append(Paragraph(f"[ ]  {step_text}", step_s))
-            story.append(Spacer(1, 3))
+            tag_label = TAG_LABELS.get(tag_key, "") if tag_key else ""
+            if tag_label:
+                story.append(Paragraph(tag_label.upper(), step_tag_s))
+            story.append(Paragraph(f"☐  {step_text}", step_s))
+            story.append(Spacer(1, 2))
         story.append(Spacer(1, 6))
 
     # ── Tag definitions ───────────────────────────────────────────────────────
@@ -908,7 +920,6 @@ def build_pdf(results: dict, answers: dict) -> bytes:
     ]]
     for i, (key, question) in enumerate(_QUESTION_TEXTS, 1):
         val = answers.get(key, "—")
-        bg = NEAR_WHITE if i % 2 == 0 else colors.white
         qa_rows.append([
             Paragraph(str(i), qa_a_s),
             Paragraph(question, qa_q_s),
@@ -920,7 +931,7 @@ def build_pdf(results: dict, answers: dict) -> bytes:
     q_col   = W - num_col - ans_col
     qa_tbl  = Table(qa_rows, colWidths=[num_col, q_col, ans_col])
     qa_style = [
-        ("BACKGROUND",    (0, 0), (-1, 0),  HEADER_BG),
+        ("BACKGROUND",    (0, 0), (-1, 0),  HEADER_BG),   # dark navy header
         ("BOX",           (0, 0), (-1, -1), 0.5, LIGHT_GREY),
         ("INNERGRID",     (0, 0), (-1, -1), 0.3, LIGHT_GREY),
         ("LEFTPADDING",   (0, 0), (-1, -1), 5),
@@ -938,11 +949,16 @@ def build_pdf(results: dict, answers: dict) -> bytes:
     # ── Footer ────────────────────────────────────────────────────────────────
     def _footer(canv, doc_obj):
         canv.saveState()
+        pw = A4[0]
+        yf = 1.1 * cm
+        # gold rule above footer
+        canv.setStrokeColor(GOLD)
+        canv.setLineWidth(0.75)
+        canv.line(ML, yf + 0.55 * cm, pw - MR, yf + 0.55 * cm)
+        # footer text
         canv.setFont("Helvetica", 7)
         canv.setFillColor(MUTED)
-        pw   = A4[0]
-        yf   = 1.1 * cm
-        canv.drawString(ML, yf, "Navisignal.app")
+        canv.drawString(ML, yf, "navisignal.app")
         canv.drawRightString(pw - MR, yf, "hello@navisignal.app")
         canv.drawCentredString(pw / 2, yf, f"Page {doc_obj.page} of 2")
         canv.restoreState()
