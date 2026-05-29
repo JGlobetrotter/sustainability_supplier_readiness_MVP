@@ -309,7 +309,7 @@ QUESTIONS = [
      "options": ["Yes, systematically", "Yes, partially", "Informal / ad hoc", "No"]},
     {"key": "confidence", "section": 3,
      "text": "How confident do you feel responding to buyer ESG, sustainability or human rights requests?",
-     "options": ["Very confident", "Somewhat confident", "Not very confident", "Not confident"]},
+     "options": ["Very confident", "Somewhat confident", "Not very confident", "Not confident at all"]},
 ]
 
 SECTOR_ASSUMPTIONS = {
@@ -469,7 +469,7 @@ def derive_tags(a: dict) -> list:
         tags.append("HRDD_RELEVANCE_HIGH")
     if a.get("supply_chain_complexity") == "Highly multi-tiered":
         tags.append("HRDD_RELEVANCE_HIGH")
-    if a.get("confidence") == "Not confident":
+    if a.get("confidence") == "Not confident at all":
         tags.append("SUPPLIER_CONFIDENCE_LOW")
     if a.get("internal_owner") == "No clear owner":
         tags.append("SUPPLIER_CONFIDENCE_LOW")
@@ -562,18 +562,18 @@ def run_screening(tags: list) -> dict:
 
     steps = []
     if "OWNER_GAP" in tag_set:
-        steps.append("Assign a single accountable owner for sustainability and compliance requests — by name and role.")
+        steps.append({"tag": "OWNER_GAP", "text": "Assign a single accountable owner for sustainability and compliance requests — by name and role."})
     if "POLICY_LIGHT" in tag_set:
-        steps.append("Draft a minimum policy set covering environment and labor/human rights, with version control and sign-off.")
+        steps.append({"tag": "POLICY_LIGHT", "text": "Draft a minimum policy set covering environment and labor/human rights, with version control and sign-off."})
     if "DOCUMENTATION_LIGHT" in tag_set:
-        steps.append("Start a basic data baseline: energy, emissions assumptions, water, and waste in a simple tracker.")
+        steps.append({"tag": "DOCUMENTATION_LIGHT", "text": "Start a basic data baseline: energy, emissions assumptions, water, and waste in a simple tracker."})
     if "HRDD_RELEVANCE_HIGH" in tag_set:
-        steps.append("Map human rights and labor risk in sourcing countries and set up a lightweight due diligence checklist.")
+        steps.append({"tag": "HRDD_RELEVANCE_HIGH", "text": "Map human rights and labor risk in sourcing countries and set up a lightweight due diligence checklist."})
     if "CSRD_CASCADE_SIGNAL" in tag_set or "BUYER_OPACITY_RISK" in tag_set:
-        steps.append("Create a buyer-response pack: 1-page overview + evidence folder + standard Q&A for incoming requests.")
+        steps.append({"tag": "CSRD_CASCADE_SIGNAL" if "CSRD_CASCADE_SIGNAL" in tag_set else "BUYER_OPACITY_RISK", "text": "Create a buyer-response pack: 1-page overview + evidence folder + standard Q&A for incoming requests."})
     if "EU_EXPOSURE_NON_EU" in tag_set:
-        steps.append("Identify EU-linked customers and expected reporting asks. Align your evidence to what they request most.")
-    steps.append("Package all outputs into a reusable Readiness Folder — policies, tracker, evidence, Q&A — for future requests.")
+        steps.append({"tag": "EU_EXPOSURE_NON_EU", "text": "Identify EU-linked customers and expected reporting asks. Align your evidence to what they request most."})
+    steps.append({"tag": None, "text": "Package all outputs into a reusable Readiness Folder — policies, tracker, evidence, Q&A — for future requests."})
 
     return {"score": score, "band": band, "band_label": band_label,
             "interpretation": interpretation, "next_steps": steps,
@@ -860,7 +860,8 @@ def build_pdf(results: dict, answers: dict) -> bytes:
     if next_steps:
         story.append(Paragraph("Recommended next steps", h2_s))
         for step in next_steps:
-            story.append(Paragraph(f"[ ]  {step}", step_s))
+            step_text = step.get("text", step) if isinstance(step, dict) else step
+            story.append(Paragraph(f"[ ]  {step_text}", step_s))
             story.append(Spacer(1, 3))
         story.append(Spacer(1, 6))
 
@@ -1161,7 +1162,7 @@ if not st.session_state.authed:
                 st.session_state.authed = True
                 st.rerun()
             else:
-                st.error("Incorrect password. Contact your administrator.")
+                st.error("Incorrect password. To request access, visit navisignal.app or email hello@navisignal.app")
         st.markdown(
             f'<div style="text-align:center;margin-top:16px;font-size:12px;color:#8094B4;">'
             f'<a href="mailto:{BETA_EMAIL}?subject=Beta access request" '
@@ -1475,14 +1476,33 @@ else:
             f'<div style="position:absolute;top:50%;left:{needle_pct}%;transform:translate(-50%,-50%);'
             f'width:14px;height:14px;border-radius:50%;background:#fafafa;border:2px solid #0A1636;"></div></div>'
             f'<div style="display:flex;justify-content:space-between;font-size:9px;font-weight:600;letter-spacing:0.08em;">'
-            f'<span style="color:#10b981;">Green</span>'
-            f'<span style="color:#f59e0b;">Amber</span>'
-            f'<span style="color:#ef4444;">Red</span></div></div>',
+            f'<span style="color:#10b981;">Green<br><span style="font-weight:400;opacity:0.7;">0–2</span></span>'
+            f'<span style="color:#f59e0b;text-align:center;">Amber<br><span style="font-weight:400;opacity:0.7;">3–6</span></span>'
+            f'<span style="color:#ef4444;text-align:right;">Red<br><span style="font-weight:400;opacity:0.7;">7–12</span></span></div></div>',
             unsafe_allow_html=True,
         )
 
     if tags:
         st.markdown('<div style="height:16px;"></div>', unsafe_allow_html=True)
+        with st.expander("Score breakdown — what drove your result"):
+            breakdown_rows = "".join(
+                f'<tr>'
+                f'<td style="padding:5px 12px 5px 0;white-space:nowrap;vertical-align:top;">'
+                f'<span style="font-size:10px;font-weight:600;color:#C8953A;">{TAG_LABELS.get(t, t)}</span></td>'
+                f'<td style="padding:5px 8px 5px 0;text-align:right;white-space:nowrap;vertical-align:top;">'
+                f'<span style="font-size:11px;color:#fafafa;font-weight:600;">+{TAG_WEIGHTS.get(t, 0)}</span></td>'
+                f'<td style="padding:5px 0;font-size:11px;color:#8094B4;line-height:1.5;vertical-align:top;">'
+                f'{TAG_DEFS.get(t, "")}</td>'
+                f'</tr>'
+                for t in tags if TAG_WEIGHTS.get(t, 0) > 0
+            )
+            st.markdown(
+                f'<table style="width:100%;border-collapse:collapse;">{breakdown_rows}</table>'
+                f'<div style="font-size:11px;color:#8094B4;margin-top:8px;border-top:1px solid #1C3060;padding-top:8px;">'
+                f'Total: <strong style="color:#fafafa;">{score} / {MAX_SCORE}</strong></div>',
+                unsafe_allow_html=True,
+            )
+
         st.markdown(
             '<div style="font-size:11px;font-weight:600;color:#8094B4;margin-bottom:8px;'
             'letter-spacing:0.05em;text-transform:uppercase;">Flags triggered</div>',
@@ -1539,8 +1559,31 @@ else:
         'font-weight:400;color:#fafafa;margin-bottom:16px;">Recommended next steps</h2>',
         unsafe_allow_html=True,
     )
-    for i, step_text in enumerate(steps):
+    for i, step in enumerate(steps):
+        tag      = step.get("tag") if isinstance(step, dict) else None
+        step_text = step.get("text", step) if isinstance(step, dict) else step
+        tag_label = TAG_LABELS.get(tag, "") if tag else ""
+        if tag_label:
+            st.markdown(
+                f'<div style="font-size:10px;font-weight:600;color:#C8953A;'
+                f'letter-spacing:0.06em;text-transform:uppercase;margin-top:12px;margin-bottom:2px;">'
+                f'{tag_label}</div>',
+                unsafe_allow_html=True,
+            )
         st.checkbox(step_text, key=f"chk_{i}", value=False)
+
+    st.markdown(
+        '<div style="background:rgba(200,149,58,0.07);border:1px solid rgba(200,149,58,0.25);'
+        'border-radius:6px;padding:14px 16px;margin-top:20px;">'
+        '<div style="font-size:11px;font-weight:600;color:#C8953A;margin-bottom:4px;'
+        'letter-spacing:0.06em;text-transform:uppercase;">Need a tailored plan?</div>'
+        '<p style="font-size:12px;color:#B0C4DE;line-height:1.6;margin:0;">'
+        'This diagnostic generates a starting point. For a customised action list matched to your '
+        'sector, buyer base, and internal capacity, contact us at '
+        '<a href="mailto:hello@navisignal.app" style="color:#C8953A;font-weight:600;">'
+        'hello@navisignal.app</a>.</p></div>',
+        unsafe_allow_html=True,
+    )
 
     sector_val = ans.get("sector", "")
     if sector_val and sector_val in SECTOR_ASSUMPTIONS:
